@@ -1,44 +1,34 @@
+import subprocess
 import os
 
-ROOT = os.path.expanduser("~/Projects/multilang/CraftReator")  # CHANGE THIS to your actual path
+ROOT = os.path.expanduser("~/Projects/multilang/CraftReator")
+LOG_FILE = os.path.expanduser("~/splash_search.log")
 
-REVERSE = {
-    "CraftReator": "MCreator",
-    "Minecraft mod making toolkit developed by Akram": "Minecraft mod making toolkit developed by Pylo",
-}
+COMMANDS = [
+    ["grep", "-rn", "mod making toolkit", ROOT, "--exclude-dir=.git", "--exclude-dir=build"],
+    ["grep", "-rn", "registered trademark", ROOT, "--exclude-dir=.git", "--exclude-dir=build"],
+    ["grep", "-rn", "developed by", ROOT, "--exclude-dir=.git", "--exclude-dir=build"],
+    ["find", ROOT, "-iname", "*splash*", "-not", "-path", "*/build/*"],
+    ["grep", "-rln", "Pylo", ROOT, "--include=*.java", "--exclude-dir=.git", "--exclude-dir=build"],
+]
 
-SKIP_DIRS = {".git", "build", "out", ".gradle", "node_modules", ".idea"}
+with open(LOG_FILE, "w", encoding="utf-8") as log:
+    for cmd in COMMANDS:
+        log.write(f"\n{'='*70}\n")
+        log.write(f"COMMAND: {' '.join(cmd)}\n")
+        log.write(f"{'='*70}\n")
+        try:
+            result = subprocess.run(cmd, capture_output=True, text=True, timeout=60)
+            if result.stdout.strip():
+                log.write(result.stdout)
+            else:
+                log.write("(no output)\n")
+            if result.stderr.strip():
+                log.write(f"\n[stderr]\n{result.stderr}")
+        except subprocess.TimeoutExpired:
+            log.write("(command timed out)\n")
+        except FileNotFoundError:
+            log.write(f"(command not found: {cmd[0]})\n")
 
-def process_file(path):
-    try:
-        with open(path, "r", encoding="utf-8") as f:
-            content = f.read()
-    except (UnicodeDecodeError, PermissionError):
-        return False
-
-    original = content
-    for old, new in REVERSE.items():
-        content = content.replace(old, new)
-
-    if content != original:
-        with open(path, "w", encoding="utf-8") as f:
-            f.write(content)
-        return True
-    return False
-
-def main():
-    changed = []
-    for dirpath, dirnames, filenames in os.walk(ROOT):
-        dirnames[:] = [d for d in dirnames if d not in SKIP_DIRS]
-        for name in filenames:
-            if name.endswith((".properties", ".java", ".ftl", ".json", ".html", ".txt", ".xml", ".gradle", ".md")):
-                full = os.path.join(dirpath, name)
-                if process_file(full):
-                    changed.append(full)
-
-    print(f"Reverted {len(changed)} files:")
-    for f in changed:
-        print(f"  {f}")
-
-if __name__ == "__main__":
-    main()
+print(f"Log written to: {LOG_FILE}")
+print(f"Open it with: cat {LOG_FILE}")
