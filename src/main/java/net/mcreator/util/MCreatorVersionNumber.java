@@ -16,6 +16,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+ // LISTEN if you wana turn on eap or trun it off go to line 81
+
 package net.mcreator.util;
 
 import net.mcreator.Launcher;
@@ -76,7 +78,7 @@ public class MCreatorVersionNumber {
 	}
 
 	public boolean isSnapshot() {
-		return snapshot;
+		return true;
 	}
 
 	public boolean isDevelopment() {
@@ -84,11 +86,11 @@ public class MCreatorVersionNumber {
 	}
 
 	public String getMajorString() {
-		return major + (snapshot ? " EAP (" + build + ")" : "");
+		return major + (isSnapshot() ? " EAP (" + build + ")" : "");
 	}
 
 	public String getFullString() {
-		return full + (snapshot ? " EAP (" + build + ")" : "");
+		return full + (isSnapshot() ? " EAP (" + build + ")" : "");
 	}
 
 	@Override public String toString() {

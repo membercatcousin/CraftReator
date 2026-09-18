@@ -97,7 +97,7 @@ public final class WorkspaceSelector extends JFrame implements DropTargetListene
 		this.workspaceOpenListener = workspaceOpenListener;
 		this.application = application;
 
-		setTitle("MCreator " + Launcher.version.getMajorString());
+		setTitle("CraftReator " + Launcher.version.getMajorString());
 		setIconImages(AppIcon.getAppIcons());
 		setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 

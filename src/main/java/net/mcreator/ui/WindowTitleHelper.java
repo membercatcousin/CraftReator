@@ -50,7 +50,7 @@ public class WindowTitleHelper {
 			}
 		}
 
-		return title.append(" - MCreator ").append(Launcher.version.getMajorString()).toString();
+		return title.append(" - CraftReator ").append(Launcher.version.getMajorString()).toString();
 	}
 
 }

@@ -112,7 +112,7 @@ public final class MCreatorApplication {
 
 		// Check if we are the first instance and if not, send args to the first instance and close ourselves
 		if (!singleAppHandler.tryAcquireLock()) {
-			LOG.warn("Another instance of MCreator is already running. Reusing it with args: {}", launchArguments);
+			LOG.warn("Another instance of CraftReator is already running. Reusing it with args: {}", launchArguments);
 			System.exit(0);
 		}
 
@@ -224,7 +224,7 @@ public final class MCreatorApplication {
 			// Do not externalize this text
 			discordClient.updatePresence("Just opened", "Version " + Launcher.version.getMajorString());
 
-			splashScreen.setProgress(100, "Loading MCreator windows");
+			splashScreen.setProgress(100, "Loading CraftReator windows");
 
 			try {
 				if (Desktop.getDesktop().isSupported(Desktop.Action.APP_ABOUT))
@@ -392,14 +392,14 @@ public final class MCreatorApplication {
 	}
 
 	public void closeApplication() {
-		LOG.debug("Closing any potentially open MCreator windows");
+		LOG.debug("Closing any potentially open CraftReator windows");
 
 		AtomicBoolean canNotClose = new AtomicBoolean();
 		ThreadUtil.runOnSwingThreadAndWait(() -> {
 			// create list copy, so we don't modify the list we iterate
 			List<MCreator> mcreatorsTmp = new ArrayList<>(openMCreators);
 			for (MCreator mcreator : mcreatorsTmp) {
-				LOG.info("Attempting to close MCreator window with workspace: {}", mcreator.getWorkspace());
+				LOG.info("Attempting to close CraftReator window with workspace: {}", mcreator.getWorkspace());
 				if (!mcreator.closeThisMCreator(false)) {
 					canNotClose.set(true);
 					return;
@@ -440,7 +440,7 @@ public final class MCreatorApplication {
 		} catch (Exception ignored) {
 		}
 
-		LOG.debug("Exiting MCreator");
+		LOG.debug("Exiting CraftReator");
 		System.exit(0); // actually exit MCreator
 	}
 
