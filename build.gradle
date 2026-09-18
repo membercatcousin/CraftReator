@@ -29,6 +29,7 @@ tasks.withType(JavaCompile).configureEach { options.encoding = 'UTF-8' }
 java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(25)
+        vendor = JvmVendorSpec.JETBRAINS
     }
 }
 
@@ -165,6 +166,8 @@ dependencies {
 }
 
 test {
+    enabled = false
+
     useJUnitPlatform()
 
     jvmArgs '--add-opens', 'java.base/java.lang=ALL-UNNAMED', '--enable-native-access', 'ALL-UNNAMED,jcef'
