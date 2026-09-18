@@ -1,0 +1,63 @@
+{
+  "args0": [
+    {
+      "type": "input_value",
+      "name": "x",
+      "check": "Number"
+    },
+    {
+      "type": "input_value",
+      "name": "y",
+      "check": "Number"
+    },
+    {
+      "type": "input_value",
+      "name": "z",
+      "check": "Number"
+    },
+    {
+      "type": "field_dropdown",
+      "name": "fluid_mode",
+      "options": [
+        [
+          "NONE",
+          "NONE"
+        ],
+        [
+          "SOURCE_ONLY",
+          "SOURCE_ONLY"
+        ],
+        [
+          "ANY",
+          "ANY"
+        ]
+      ]
+    }
+  ],
+  "inputsInline": true,
+  "output": "Vector",
+  "colour": 270,
+  "mcreator": {
+    "group": "raytracing",
+    "toolbox_id": "worlddata",
+    "toolbox_init": [
+      "<value name=\"x\"><block type=\"coord_x\"></block></value>",
+      "<value name=\"y\"><block type=\"coord_y\"></block></value>",
+      "<value name=\"z\"><block type=\"coord_z\"></block></value>"
+    ],
+    "inputs": [
+      "x",
+      "y",
+      "z"
+    ],
+    "fields": [
+      "fluid_mode"
+    ],
+    "dependencies": [
+      {
+        "name": "world",
+        "type": "world"
+      }
+    ]
+  }
+}

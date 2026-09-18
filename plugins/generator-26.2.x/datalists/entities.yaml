@@ -1,0 +1,7 @@
+# Entities introduced in Minecraft 26.2 / NeoForge 26.2.
+# Merged into the core entities data list; only shown on generators
+# that map them (see datapack-26.2.x/mappings/entities.yaml).
+
+- EntitySulfurCube:
+  readable_name: "Sulfur cube"
+  type: spawnable

@@ -1,0 +1,12 @@
+# Block sound types introduced in Minecraft 26.2 / NeoForge 26.2.
+# Merged into the core stepsounds data list; only shown on generators
+# that map them (see neoforge-26.2/mappings/stepsounds.yaml).
+
+- SULFUR:
+  texture: SULFUR
+- POTENT_SULFUR:
+  texture: POTENT_SULFUR
+- SULFUR_SPIKE:
+  texture: SULFUR_SPIKE
+- CINNABAR:
+  texture: CINNABAR

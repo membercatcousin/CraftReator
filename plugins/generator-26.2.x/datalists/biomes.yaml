@@ -1,0 +1,6 @@
+# Biomes introduced in Minecraft 26.2 / NeoForge 26.2.
+# Merged into the core biomes data list; only shown on generators
+# that map them (see datapack-26.2.x/mappings/biomes.yaml).
+
+- sulfur_caves:
+  readable_name: "Sulfur caves"

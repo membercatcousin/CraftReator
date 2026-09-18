@@ -1,0 +1,15 @@
+# Attributes introduced in Minecraft 26.2 / NeoForge 26.2.
+# Merged into the core attributes data list; only shown on generators
+# that map them (see neoforge-26.2/mappings/attributes.yaml).
+- BOUNCINESS:
+  readable_name: "Bounciness"
+- FRICTION_MODIFIER:
+  readable_name: "Friction modifier"
+- AIR_DRAG_MODIFIER:
+  readable_name: "Air drag modifier"
+- BELOW_NAME_DISTANCE:
+  readable_name: "Below name display distance"
+- CREATIVE_FLIGHT:
+  readable_name: "Creative flight"
+- GLIDING_FLIGHT:
+  readable_name: "Gliding flight"

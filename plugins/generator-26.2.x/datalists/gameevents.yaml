@@ -1,0 +1,6 @@
+# Game events introduced in Minecraft 26.2 / NeoForge 26.2.
+# Merged into the core gameevents data list; only shown on generators
+# that map them (see datapack-26.2.x/mappings/gameevents.yaml).
+
+- BOUNCE:
+  readable_name: Bounce

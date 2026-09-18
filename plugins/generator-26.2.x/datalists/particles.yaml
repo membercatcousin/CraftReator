@@ -1,0 +1,8 @@
+# Particles introduced in Minecraft 26.2 / NeoForge 26.2.
+# Merged into the core particles data list; only shown on generators
+# that map them (see datapack-26.2.x/mappings/particles.yaml).
+
+- SULFUR_BUBBLES
+- NOXIOUS_GAS
+- NOXIOUS_GAS_CLOUD
+- SULFUR_CUBE_GOO

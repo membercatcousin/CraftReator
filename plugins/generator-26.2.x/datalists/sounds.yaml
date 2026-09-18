@@ -1,0 +1,44 @@
+# Sound events introduced in Minecraft 26.2 / NeoForge 26.2.
+# Merged into the core sounds data list; only shown on generators
+# that map them (see datapack-26.2.x/mappings/sounds.yaml).
+
+- block.cinnabar.break
+- block.cinnabar.fall
+- block.cinnabar.hit
+- block.cinnabar.place
+- block.cinnabar.step
+- block.potent_sulfur.break
+- block.potent_sulfur.fall
+- block.potent_sulfur.geyser_continuous_eruption
+- block.potent_sulfur.geyser_continuous_eruption_active
+- block.potent_sulfur.geyser_eruption
+- block.potent_sulfur.geyser_eruption_active
+- block.potent_sulfur.hit
+- block.potent_sulfur.noxious_gas
+- block.potent_sulfur.place
+- block.potent_sulfur.step
+- block.sulfur.break
+- block.sulfur.fall
+- block.sulfur.hit
+- block.sulfur.place
+- block.sulfur.step
+- block.sulfur_spike.break
+- block.sulfur_spike.fall
+- block.sulfur_spike.hit
+- block.sulfur_spike.land
+- block.sulfur_spike.place
+- block.sulfur_spike.step
+- entity.small_sulfur_cube.death
+- entity.small_sulfur_cube.eat
+- entity.small_sulfur_cube.hurt
+- entity.small_sulfur_cube.jump
+- entity.small_sulfur_cube.squish
+- entity.sulfur_cube.absorb
+- entity.sulfur_cube.bounce
+- entity.sulfur_cube.death
+- entity.sulfur_cube.eject
+- entity.sulfur_cube.hurt
+- entity.sulfur_cube.jump
+- entity.sulfur_cube.squish
+- item.bucket.empty_sulfur_cube
+- item.bucket.fill_sulfur_cube

@@ -1,0 +1,5 @@
+# Damage types introduced in Minecraft 26.2 / NeoForge 26.2.
+# Merged into the core damagesources data list; only shown on generators
+# that map them (see datapack-26.2.x/mappings/damagesources.yaml).
+
+- SULFUR_CUBE_HOT
