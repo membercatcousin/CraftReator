@@ -1,4 +1,4 @@
-[![CraftReator](https://mcreator.net/image/brand/mcreator300s.png)](https://mcreator.net/)
+![CraftReator](src/main/resources/net/mcreator/ui/res/logo.svg)
 
 [![License](https://img.shields.io/badge/License-GPLv3-blue.svg?style=flat-square)](https://github.com/MCreator/MCreator/blob/master/LICENSE.txt)
 [![Build](https://img.shields.io/github/actions/workflow/status/MCreator/MCreator/test.yml?style=flat-square&branch=master)](https://github.com/MCreator/MCreator/actions/workflows/test.yml)
