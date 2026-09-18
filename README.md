@@ -24,13 +24,7 @@ tips on [MCreator developers wiki](https://github.com/MCreator/MCreator/wiki) (m
 
 You are welcome to support this project by opening pull requests. Read more about contributing in our [contributing guidelines](CONTRIBUTING.md).
 
-Big thanks to [all the people](https://github.com/membercatcousin/CraftReator/graphs/contributors) who already contributed to CaftReator! 💚
-
-<a href="https://github.com/MCreator/MCreator/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=MCreator/MCreator" width="615"/>
-</a>
-
-Big thanks to [all the people](https://github.com/MCreator/MCreator/graphs/contributors) who already contributed to MCreator! 💚
+Big thanks to [all the people](https://github.com/membercatcousin/CraftReator/graphs/contributors) who already contributed to CaftReator/MCreator! 💚
 
 <a href="https://github.com/MCreator/MCreator/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=MCreator/MCreator" width="615"/>
