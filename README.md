@@ -18,13 +18,13 @@ To clone this repository, run `git clone --recursive https://github.com/memberca
 
 > [!TIP]
 > It is recommended to use Kate or Intellij IDEA for development and testing. Learn more about the development process, and 
-tips on [MCreator developers wiki](https://github.com/MCreator/MCreator/wiki) (most of the tips of this website work on this project but not all of them.
+tips on [MCreator developers wiki](https://github.com/MCreator/MCreator/wiki) (most of the tips of this website work on this project but not all of them).
 
 ## Contributing
 
 You are welcome to support this project by opening pull requests. Read more about contributing in our [contributing guidelines](CONTRIBUTING.md).
 
-Big thanks to [all the people](https://github.com/membercatcousin/CraftReator/graphs/contributors) who already contributed to CaftReator/MCreator! 💚
+Big thanks to [all the people](https://github.com/membercatcousin/CraftReator/graphs/contributors) who already contributed to CraftReator/MCreator! 💚
 
 <a href="https://github.com/MCreator/MCreator/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=MCreator/MCreator" width="615"/>
@@ -33,7 +33,7 @@ Big thanks to [all the people](https://github.com/membercatcousin/CraftReator/gr
 ### Translations
 
 > [!TIP]
-> If you would like to help us translate CraftReator to your language, join join Mcreator/Pylo on [translate.mcreator.net](https://translate.mcreator.net/)! If your language is not on the list yet, feel free to suggest us to add it as we pull language changes from MCreator to this repo.
+> If you would like to help us translate CraftReator to your language,join Mcreator/Pylo on [translate.mcreator.net](https://translate.mcreator.net/)! If your language is not on the list yet, feel free to suggest us to add it as we pull language changes from MCreator to this repo.
 
 ## License and trademark
 
