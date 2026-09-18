@@ -9,7 +9,7 @@
 
 <img align="right" width="300" src="https://mcreator.net/image/about/about1.png">
 
-CraftReator is a software used to make Minecraft Java Edition mods, Minecraft Bedrock Edition Add-Ons, and data packs using an intuitive easy-to-learn interface or with an integrated code editor. 
+CraftReator is a software used to make Minecraft Java Edition mods, Minecraft Bedrock Edition Add-Ons (NOT MAINTAINED/DEPRECATED), and data packs using an intuitive easy-to-learn interface or with an integrated code editor. 
 
 ## Development
 
