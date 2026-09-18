@@ -1,8 +1,5 @@
 {
   "id": "generator-26.2.x",
-  "supportedversions": [
-    2026002
-  ],
   "info": {
     "name": "Minecraft 26.2.x Java Edition generator"
   }

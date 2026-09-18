@@ -9,14 +9,14 @@
          xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities"
          IgnorableNamespaces="uap uap2 uap3 uap7 desktop7 rescap">
 
-    <Identity Name="Pylo.MCreator"
+    <Identity Name="membercatcousin.CraftReator"
               Publisher="CN=3D5C20AC-5C16-46BE-A32C-8524A0714D07"
               Version="%version%.0"
               ProcessorArchitecture="x64"/>
 
     <Properties>
-        <DisplayName>MCreator</DisplayName>
-        <PublisherDisplayName>Pylo</PublisherDisplayName>
+        <DisplayName>CraftReator</DisplayName>
+        <PublisherDisplayName>membercatcousin</PublisherDisplayName>
         <Logo>Assets\StoreLogo.png</Logo>
     </Properties>
 
@@ -33,10 +33,10 @@
     </Capabilities>
 
     <Applications>
-        <Application Id="MCreator"
+        <Application Id="CraftReator"
                      Executable="mcreator.exe"
                      EntryPoint="Windows.FullTrustApplication">
-            <uap:VisualElements DisplayName="MCreator"
+            <uap:VisualElements DisplayName="CraftReator"
                                 Description="Minecraft mod maker"
                                 BackgroundColor="transparent"
                                 Square150x150Logo="Assets\Square150x150Logo.png"
@@ -45,14 +45,14 @@
             <Extensions>
                 <uap:Extension Category="windows.fileTypeAssociation">
                     <uap3:FileTypeAssociation Name="mcreator" Parameters="&quot;%1&quot;">
-                        <uap:DisplayName>MCreator workspace file</uap:DisplayName>
+                        <uap:DisplayName>CraftReator workspace file</uap:DisplayName>
                         <uap:Logo>Assets\Square44x44Logo.png</uap:Logo>
                         <uap:SupportedFileTypes>
                             <uap:FileType>.mcreator</uap:FileType>
                         </uap:SupportedFileTypes>
                         <uap2:SupportedVerbs>
                             <uap3:Verb Id="open" Parameters="&quot;%1&quot;" uap7:Default="true">Open</uap3:Verb>
-                            <uap3:Verb Id="edit" Parameters="&quot;%1&quot;">Edit this MCreator workspace</uap3:Verb>
+                            <uap3:Verb Id="edit" Parameters="&quot;%1&quot;">Edit this CraftReator workspace</uap3:Verb>
                         </uap2:SupportedVerbs>
                         <desktop7:ProgId>MCreatorWorkspaceFile</desktop7:ProgId>
                     </uap3:FileTypeAssociation>
