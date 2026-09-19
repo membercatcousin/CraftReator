@@ -300,7 +300,7 @@ import java.util.stream.Stream;
 
 	public String getModElementsPackage() {
 		if (modElementsPackage == null)
-			return "net.mcreator." + modid;
+			return "net.craftreator." + modid;
 		return modElementsPackage;
 	}
 
@@ -315,7 +315,7 @@ import java.util.stream.Stream;
 
 	public String getCredits() {
 		if (credits == null || credits.isBlank())
-			return "Created using mod maker MCreator - https://mcreator.net/about";
+			return "Created using mod maker CraftReator";
 		return credits;
 	}
 
