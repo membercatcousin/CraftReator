@@ -1,1 +1,0 @@
-dimension.spawnEntity("${generator.map(field$entity, "entities")}", { x: ${input$x}, y: ${input$y}, z: ${input$z} });

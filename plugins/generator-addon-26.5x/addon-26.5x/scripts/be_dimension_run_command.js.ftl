@@ -1,1 +1,0 @@
-dimension.runCommand(${input$command});
