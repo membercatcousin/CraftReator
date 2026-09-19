@@ -15,26 +15,26 @@ SetCompressor "bzip2" ; to improve installer open performance and its size
 
 !searchreplace MCREATOR_VERSION_SHORT ${MCREATOR_VERSION} "." ""
 
-Name "MCreator ${MCREATOR_VERSION}"
-BrandingText "MCreator ${MCREATOR_VERSION}.${BUILD} - Developed by Pylo"
+Name "CraftReator ${MCREATOR_VERSION}"
+BrandingText "CraftReator ${MCREATOR_VERSION}.${BUILD} - Developed by Pylo"
 
-!define MUI_PRODUCT "MCreator"
+!define MUI_PRODUCT "CraftReator"
 !define MUI_ICON "..\..\platform\windows\installer\installer.ico"
 !define MUI_UNICON "..\..\platform\windows\installer\uninstaller.ico"
 
 RequestExecutionLevel admin
 
-VIAddVersionKey ProductName      "MCreator ${MCREATOR_VERSION} Installer"
-VIAddVersionKey Comments         "Installer for MCreator ${MCREATOR_VERSION}"
+VIAddVersionKey ProductName      "CraftReator ${MCREATOR_VERSION} Installer"
+VIAddVersionKey Comments         "Installer for CraftReator ${MCREATOR_VERSION}"
 VIAddVersionKey CompanyName      "Pylo"
 VIAddVersionKey FileVersion      "${MCREATOR_VERSION}.${BUILD}"
 VIAddVersionKey LegalCopyright   "Copyright %year% (C) Pylo"
-VIAddVersionKey FileDescription  "Installer for MCreator ${MCREATOR_VERSION}.${BUILD}"
+VIAddVersionKey FileDescription  "Installer for CraftReator ${MCREATOR_VERSION}.${BUILD}"
 VIProductVersion                 "${MCREATOR_VERSION}.${BUILD}.0"
 
-OutFile "MCreator ${MCREATOR_VERSION} Windows ${BITS}bit.exe"
+OutFile "CraftReator ${MCREATOR_VERSION} Windows ${BITS}bit.exe"
 
-InstallDir "$PROGRAMFILES${BITS}\Pylo\MCreator"
+InstallDir "$PROGRAMFILES${BITS}\Pylo\CraftReator"
 !define INSTALLSIZE 306000
 
 !define MUI_HEADERIMAGE
@@ -45,10 +45,10 @@ InstallDir "$PROGRAMFILES${BITS}\Pylo\MCreator"
 !define MUI_LICENSEPAGE_TEXT_TOP "Read the license agreement below."
 
 !define MUI_FINISHPAGE_RUN
-!define MUI_FINISHPAGE_RUN_TEXT "Start MCreator after finish"
+!define MUI_FINISHPAGE_RUN_TEXT "Start CraftReator after finish"
 !define MUI_FINISHPAGE_RUN_FUNCTION LaunchAsUser
 
-!define MUI_FINISHPAGE_LINK "Donate and support MCreator project"
+!define MUI_FINISHPAGE_LINK "Donate and support the MCreator/CraftReator project"
 !define MUI_FINISHPAGE_LINK_LOCATION "http://mcreator.net/donate"
 
 !define MUI_ABORTWARNING
@@ -62,7 +62,7 @@ InstallDir "$PROGRAMFILES${BITS}\Pylo\MCreator"
 !define MUI_PAGE_CUSTOMFUNCTION_SHOW un.ModifyUnConfirm
 !define MUI_PAGE_CUSTOMFUNCTION_LEAVE un.ModifyUnConfirmLeave
 !insertmacro MUI_UNPAGE_WELCOME
-UninstPage Custom un.LockedListShow un.LockedListLeave
+; UninstPage Custom un.LockedListShow un.LockedListLeave
 !insertmacro MUI_UNPAGE_CONFIRM
 !insertmacro MUI_UNPAGE_INSTFILES
 !insertmacro MUI_UNPAGE_FINISH
@@ -73,7 +73,7 @@ Function .onInit
 ReadRegStr $0 HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${MUI_PRODUCT}" "UninstallString"
 
 ${If} $0 != ""
-${AndIf} ${Cmd} `MessageBox MB_YESNO|MB_ICONQUESTION "Installer has detected a previous version of MCreator installed. \
+${AndIf} ${Cmd} `MessageBox MB_YESNO|MB_ICONQUESTION "Installer has detected a previous version of CraftReator installed. \
                  If you intend to install the new version in the same folder as the \
                  old version, you NEED to uninstall the old version first. \
                  Do you want to uninstall previous version?" /SD IDYES IDYES`
@@ -81,7 +81,7 @@ ${AndIf} ${Cmd} `MessageBox MB_YESNO|MB_ICONQUESTION "Installer has detected a p
 ${EndIf}
 FunctionEnd
 
-Section "MCreator ${MCREATOR_VERSION}" Installation
+Section "CraftReator ${MCREATOR_VERSION}" Installation
   SectionIn RO
 
   ;Add files
@@ -90,14 +90,14 @@ Section "MCreator ${MCREATOR_VERSION}" Installation
   File /r "win${BITS}\*"
 
   ;create desktop shortcut
-  CreateShortCut "$DESKTOP\MCreator.lnk" "$INSTDIR\mcreator.exe"
+  CreateShortCut "$DESKTOP\CraftReator.lnk" "$INSTDIR\mcreator.exe"
 
   ;create start menu entry
   CreateDirectory "$SMPROGRAMS\Pylo"
-  CreateShortCut "$SMPROGRAMS\Pylo\MCreator.lnk" "$INSTDIR\mcreator.exe"
+  CreateShortCut "$SMPROGRAMS\Pylo\CraftReator.lnk" "$INSTDIR\mcreator.exe"
 
   ;write uninstall information to the registry
-  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${MUI_PRODUCT}" "DisplayName" "MCreator ${MCREATOR_VERSION}"
+  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${MUI_PRODUCT}" "DisplayName" "CraftReator ${MCREATOR_VERSION}"
   WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${MUI_PRODUCT}" "Publisher" "Pylo"
   WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${MUI_PRODUCT}" "DisplayVersion" "${MCREATOR_VERSION}.${BUILD}"
   WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${MUI_PRODUCT}" "URLInfoAbout" "https://mcreator.net/"
@@ -106,17 +106,17 @@ Section "MCreator ${MCREATOR_VERSION}" Installation
   WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${MUI_PRODUCT}" "UninstallString" "$INSTDIR\uninstall.exe"
   WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${MUI_PRODUCT}" "DisplayIcon" "$INSTDIR\mcreator.exe"
   WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${MUI_PRODUCT}" "EstimatedSize" ${INSTALLSIZE}
-  WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${MUI_PRODUCT}}" "NoModify" 1
+  WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${MUI_PRODUCT}" "NoModify" 1
   WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${MUI_PRODUCT}" "NoRepair" 1
 
   ;add .mcreator file association
-  WriteRegStr HKCR ".mcreator" "" "MCreatorWorkspaceFile"
-  WriteRegStr HKCR "MCreatorWorkspaceFile" "" "MCreator workspace file"
-  WriteRegStr HKCR "MCreatorWorkspaceFile\shell" "" "open"
-  WriteRegStr HKCR "MCreatorWorkspaceFile\DefaultIcon" "" "$INSTDIR\mcreator.exe,0"
-  WriteRegStr HKCR "MCreatorWorkspaceFile\shell\edit" "" "Edit this MCreator workspace"
-  WriteRegStr HKCR "MCreatorWorkspaceFile\shell\edit\command" "" "$\"$INSTDIR\mcreator.exe$\" $\"%1$\""
-  WriteRegStr HKCR "MCreatorWorkspaceFile\shell\open\command" "" "$\"$INSTDIR\mcreator.exe$\" $\"%1$\""
+  WriteRegStr HKCR ".mcreator" "" "CraftReatorWorkspaceFile"
+  WriteRegStr HKCR "CraftReatorWorkspaceFile" "" "CraftReator workspace file"
+  WriteRegStr HKCR "CraftReatorWorkspaceFile\shell" "" "open"
+  WriteRegStr HKCR "CraftReatorWorkspaceFile\DefaultIcon" "" "$INSTDIR\mcreator.exe,0"
+  WriteRegStr HKCR "CraftReatorWorkspaceFile\shell\edit" "" "Edit this CraftReator workspace"
+  WriteRegStr HKCR "CraftReatorWorkspaceFile\shell\edit\command" "" "$\"$INSTDIR\mcreator.exe$\" $\"%1$\""
+  WriteRegStr HKCR "CraftReatorWorkspaceFile\shell\open\command" "" "$\"$INSTDIR\mcreator.exe$\" $\"%1$\""
 
   WriteUninstaller "$INSTDIR\uninstall.exe"
 
@@ -139,13 +139,13 @@ Function un.ModifyUnConfirmLeave
 FunctionEnd
 
 Section "Uninstall"
-  ;Delete Folders of MCreator
+  ;Delete Folders of CraftReator
   RMDir /r "$INSTDIR\jdk\*.*"
   RMDir /r "$INSTDIR\lib\*.*"
   RMDir /r "$INSTDIR\license\*.*"
   RMDir /r "$INSTDIR\plugins\*.*"
 
-  ;Delete Files of MCreator
+  ;Delete Files of CraftReator
   Delete "$INSTDIR\mcreator.exe"
   Delete "$INSTDIR\mcreator.bat"
   Delete "$INSTDIR\LICENSE.txt"
@@ -157,22 +157,28 @@ Section "Uninstall"
   RMDir "$INSTDIR"
 
   ;Remove shortcut
-  Delete "$DESKTOP\MCreator.lnk"
+  Delete "$DESKTOP\CraftReator.lnk"
 
   ;Remove start menu entry
-  Delete "$SMPROGRAMS\Pylo\MCreator.lnk"
+  Delete "$SMPROGRAMS\Pylo\CraftReator.lnk"
   RMDir "$SMPROGRAMS\Pylo"
 
   ;Delete user data if preserve option was not selected
   ${If} $keepUserDataState <> 1
+    MessageBox MB_YESNO|MB_ICONEXCLAMATION \
+      "WARNING: CraftReator shares its settings folder with MCreator.$\r$\n$\r$\nDeleting these files will reset your MCreator preferences and cache too.$\r$\n$\r$\nAre you sure you want to delete them?" \
+      /SD IDNO IDNO skipDeleteUserData
+
     RMDir /r "$PROFILE\.mcreator\*.*"
+
+    skipDeleteUserData:
   ${EndIf}
 
   ;Delete Uninstaller And Unistall Registry Entries
   DeleteRegKey HKLM "Software\${MUI_PRODUCT}"
   DeleteRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${MUI_PRODUCT}"
 
-  DeleteRegKey HKCR "MCreatorWorkspaceFile"
+  DeleteRegKey HKCR "CraftReatorWorkspaceFile"
   DeleteRegKey HKCR ".mcreator"
 SectionEnd
 
@@ -196,15 +202,15 @@ Function UninstallPrevious
     ${EndIf}
 FunctionEnd
 
-Function un.LockedListShow
-  !insertmacro MUI_HEADER_TEXT 'Scanning for locked files' 'Clicking next will auto-close the programs listed below'
-  LockedList::AddFile "$INSTDIR\jdk\bin\java.exe"
-  LockedList::AddFile "$INSTDIR\jdk\bin\javaw.exe"
-  LockedList::AddFolder "$INSTDIR\plugins"
-  LockedList::AddFolder "$INSTDIR\lib"
-  LockedList::Dialog /autonext /autoclosesilent
-  Pop $R0
-FunctionEnd
+; Function un.LockedListShow
+;   !insertmacro MUI_HEADER_TEXT 'Scanning for locked files' 'Clicking next will auto-close the programs listed below'
+;   LockedList::AddFile "$INSTDIR\jdk\bin\java.exe"
+;   LockedList::AddFile "$INSTDIR\jdk\bin\javaw.exe"
+;   LockedList::AddFolder "$INSTDIR\plugins"
+;   LockedList::AddFolder "$INSTDIR\lib"
+;   LockedList::Dialog /autonext /autoclosesilent
+;   Pop $R0
+; FunctionEnd
 
 Function un.LockedListLeave
   StrCpy $R1 1
