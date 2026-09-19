@@ -27,7 +27,6 @@ public class NotificationsSection extends PreferencesSection {
 	public final BooleanEntry openWhatsNextPage;
 	public final BooleanEntry checkAndNotifyForUpdates;
 	public final BooleanEntry checkAndNotifyForPatches;
-	public final BooleanEntry showWebsiteNewsNotifications;
 	public final BooleanEntry checkAndNotifyForPluginUpdates;
 
 	NotificationsSection(String preferencesIdentifier) {
@@ -36,7 +35,6 @@ public class NotificationsSection extends PreferencesSection {
 		openWhatsNextPage = addEntry(new BooleanEntry("openWhatsNextPage", true));
 		checkAndNotifyForUpdates = addEntry(new BooleanEntry("checkAndNotifyForUpdates", true));
 		checkAndNotifyForPatches = addEntry(new BooleanEntry("checkAndNotifyForPatches", true));
-		showWebsiteNewsNotifications = addEntry(new BooleanEntry("showWebsiteNewsNotifications", true));
 		checkAndNotifyForPluginUpdates = addEntry(new BooleanEntry("checkAndNotifyForPluginUpdates", false));
 	}
 

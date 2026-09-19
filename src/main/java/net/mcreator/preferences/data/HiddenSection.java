@@ -35,7 +35,6 @@ public class HiddenSection extends PreferencesSection {
 	public final BooleanEntry fullScreen;
 	public final PreferencesEntry<File> java_home;
 	public final StringEntry uiTheme;
-	public final StringEntry lastWebsiteNewsRead;
 	public final StringEntry defenderExclusions;
 
 	HiddenSection(String preferencesIdentifier) {
@@ -56,7 +55,6 @@ public class HiddenSection extends PreferencesSection {
 			}
 		});
 		uiTheme = addEntry(new StringEntry("uiTheme", "default_dark"));
-		lastWebsiteNewsRead = addEntry(new StringEntry("lastWebsiteNewsRead", ""));
 		defenderExclusions = addEntry(new StringEntry("defenderExclusions",
 				"")); // empty if user was not asked yet, otherwise "added", "skipped" or "failed"
 	}
