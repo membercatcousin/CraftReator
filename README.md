@@ -37,7 +37,7 @@ Big thanks to [all the people](https://github.com/membercatcousin/CraftReator/gr
 
 ## License and trademark
 
-CraftReator is licensed under the GPL-3.0 license (with exceptions implemented as specified in section 7 of GPL-3.0) if not otherwise stated in source files or other files of this project. Copyright 2020 Pylo and [contributors](https://github.com/MCreator/MCreator/graphs/contributors).
+CraftReator is licensed under the GPL-3.0 license (with exceptions implemented as specified in section 7 of GPL-3.0) if not otherwise stated in source files or other files of this project. Copyright 2026 membercatcousin and [contributors](https://github.com/membercatcousin/CraftReator/graphs/contributors).
 
 
 CraftReator/MCreator uses several third-party libraries and projects. License files, attributions, and credits for these projects are located in the `license` subdirectory.
