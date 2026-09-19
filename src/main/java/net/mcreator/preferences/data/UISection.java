@@ -40,6 +40,8 @@ public class UISection extends PreferencesSection {
 	public final BooleanEntry expandSectionsByDefault;
 	public final BooleanEntry autoReloadTabs;
 	public final BooleanEntry remindOfUnsavedChanges;
+	public final BooleanEntry faucetMode;
+	public final StringEntry uiScale;
 
 	public UISection(String preferencesIdentifier) {
 		super(preferencesIdentifier);
@@ -53,6 +55,9 @@ public class UISection extends PreferencesSection {
 		expandSectionsByDefault = addEntry(new BooleanEntry("expandSectionsByDefault", false));
 		autoReloadTabs = addEntry(new BooleanEntry("autoReloadTabs", true));
 		remindOfUnsavedChanges = addEntry(new BooleanEntry("remindOfUnsavedChanges", false));
+		faucetMode = addEntry(new BooleanEntry("faucetMode", false));
+		uiScale = addEntry(
+				new StringEntry("uiScale", "100%", "75%", "80%", "90%", "100%", "110%", "125%", "150%", "175%", "200%"));
 	}
 
 	@Override public String getSectionKey() {

@@ -74,6 +74,13 @@ public class Launcher {
 		System.setProperty("apple.laf.useScreenMenuBar",
 				Boolean.toString(PreferencesManager.PREFERENCES.ui.usemacOSMenuBar.get()));
 
+		try {
+			String scaleStr = PreferencesManager.PREFERENCES.ui.uiScale.get().replace("%", "").trim();
+			double scaleFactor = Double.parseDouble(scaleStr) / 100.0;
+			System.setProperty("flatlaf.uiScale", String.valueOf(scaleFactor));
+		} catch (Exception ignored) {
+		}
+
 		// Some flags to prevent rendering issues with certain GPU drivers on Linux
 		if (OS.getOS() == OS.LINUX) {
 			System.setProperty("sun.java2d.opengl", "false");

@@ -1,0 +1,2 @@
+<#include "mcitems.ftl">
+/*@int*/(${mappedMCItemToItemStackCode(input$item, 1)}.getEnchantments().getLevel(world.registryAccess().lookupOrThrow(Registries.ENCHANTMENT).getOrThrow(${generator.map(field$enhancement, "enchantments")})))

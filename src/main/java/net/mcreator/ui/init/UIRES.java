@@ -19,6 +19,7 @@
 package net.mcreator.ui.init;
 
 import com.formdev.flatlaf.extras.FlatSVGIcon;
+import net.mcreator.Launcher;
 import net.mcreator.plugin.PluginLoader;
 import net.mcreator.preferences.PreferencesManager;
 
@@ -84,6 +85,10 @@ public class UIRES {
 	 * @return the image icon
 	 */
 	public static ImageIcon get(String identifier) {
+		if (PreferencesManager.PREFERENCES.ui.faucetMode.get()) {
+			return getBuiltIn("FAUCET");
+		}
+
 		ImageIcon currentThemeSvg = THEME_CACHE.get(identifier + ".svg");
 		if (currentThemeSvg != null)
 			return currentThemeSvg;

@@ -291,6 +291,16 @@ public class PreferencesDialog extends MCreatorDialog {
 		if (description == null)
 			description = "";
 
+		if ("faucetMode".equals(entry.getID())) {
+			name = "Enable Faucet Mode";
+			description = "Replaces interface icons with faucets";
+		}
+
+		if ("uiScale".equals(entry.getID())) {
+			name = "Interface Scale";
+			description = "Adjusts the scale factor of the user interface (requires restart)";
+		}
+
 		JComponent label = L10N.label("dialog.preferences.entry_description", name, description);
 		JComponent component = entry.getComponent(parent, _ -> markChanged());
 		if (component != null) {
