@@ -1,6 +1,0 @@
-[Desktop Entry]
-Exec=/bin/bash -c 'cd "/home/akram/Projects/multilang/CraftReator" && ./mcreator.sh'
-Type=Application
-Terminal=false
-Name=MCreator
-Icon=/home/akram/Projects/multilang/CraftReator/icon.png
