@@ -210,3 +210,15 @@
     </#if>
     <#return '{ "Name": "minecraft:air" }'>
 </#function>
+
+<#function mappedPotionToRegistryName potionValue>
+    <#assign raw = potionValue?string?replace("POTION:", "")>
+    <#if raw?starts_with("CUSTOM:")>
+        <#assign customelement = generator.getRegistryNameFromFullName(raw)!""/>
+        <#return "${modid}:" + customelement>
+    <#elseif raw?contains(":")>
+        <#return raw>
+    <#else>
+        <#return "minecraft:" + raw>
+    </#if>
+</#function>
