@@ -18,7 +18,6 @@
 
 <#-- @formatter:off -->
 <#include "../mcitems.ftl">
-<#assign brewingRecipes = recipes?filter(recipe -> recipe.recipeType == "Brewing")>
 
 /*
  *	MCreator note: This file will be REGENERATED on each build.
@@ -30,16 +29,7 @@ package ${package}.init;
 public class ${JavaModName}BrewingRecipes {
 
 	public static void load() {
-		FabricPotionBrewingBuilder.BUILD.register((builder) -> {
-			<#-- Fabric allows only potions as input and output -->
-			<#list brewingRecipes as recipe>
-				<#if recipe.brewingInputStack?starts_with("POTION:") && recipe.brewingReturnStack?starts_with("POTION:")>
-					builder.registerPotionRecipe(${generator.map(recipe.brewingInputStack?replace("POTION:",""), "potions")},
-							${mappedMCItemToIngredient(recipe.brewingIngredientStack)},
-							${generator.map(recipe.brewingReturnStack?replace("POTION:",""), "potions")});
-				</#if>
-			</#list>
-		});
+		// In 26.3, brewing recipes are data-driven JSON in data/<modid>/recipe/
 	}
 }
 </@javacompress>
