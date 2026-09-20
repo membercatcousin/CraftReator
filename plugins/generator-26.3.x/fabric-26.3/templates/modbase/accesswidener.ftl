@@ -1,8 +1,6 @@
 classTweaker v1 official
 
 <#if w.getGElementsOfType("biome")?filter(e -> e.spawnBiome || e.spawnInCaves || e.spawnBiomeNether)?size != 0>
-accessible class net/minecraft/world/level/levelgen/SurfaceRules$SequenceRuleSource
-accessible method net/minecraft/world/level/levelgen/SurfaceRules$SequenceRuleSource <init> (Ljava/util/List;)V
 accessible class net/minecraft/world/level/biome/MultiNoiseBiomeSourceParameterList$Preset$SourceProvider
 </#if>
 

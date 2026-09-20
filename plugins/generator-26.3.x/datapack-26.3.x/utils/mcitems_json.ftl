@@ -2,22 +2,22 @@
     <#if mappedBlock?trim?starts_with("/*@BlockStateProvider*/")>
         <#return mappedBlock?replace("/*@BlockStateProvider*/", "")>
     <#else>
-        <#return '{"type": "minecraft:simple_state_provider", "state": ' + mappedBlock + '}'>
+        <#return '{"type": "minecraft:simple", "state": ' + mappedBlock + '}'>
     </#if>
 </#function>
 
 <#function handleExtension mappedBlock customelement>
     <#assign extension = mappedBlock?keep_after_last(".")?replace("body", "chestplate")?replace("legs", "leggings")>
     <#if extension == "wall"> <#-- Special handling for wall variant of signs -->
-        <#if customelement?ends_with("hanging_sign")> <#-- If element name ends with "hanging_sign", we can use proper naming for wall sign -->
+        <#if customelement?ends_with("hanging_sign")> <#-- If element name ends with hanging_sign, we can use proper naming for wall sign -->
             <#return customelement?remove_ending("hanging_sign") + "wall_hanging_sign">
-        <#elseif customelement?ends_with("sign")> <#-- If element name ends with "sign", we can use proper naming for wall sign -->
+        <#elseif customelement?ends_with("sign")> <#-- If element name ends with sign, we can use proper naming for wall sign -->
             <#return customelement?remove_ending("sign") + "wall_sign">
         <#else>
             <#return "wall_" + customelement>
         </#if>
     <#else>
-    	<#return (extension?has_content)?then(customelement + "_" + extension, customelement)>
+        <#return (extension?has_content)?then(customelement + "_" + extension, customelement)>
     </#if>
 </#function>
 
@@ -175,7 +175,7 @@
             </#if>
 
             <#if properties?has_content>
-                <#assign retval='{ "Name": "' + mcitemresourcepath + '", "Properties" : {'/>
+                <#assign retval='{ "id": "' + mcitemresourcepath + '", "properties" : {'/>
                 <#list properties as property>
                     <#assign retval = retval + '"' + property.name + '": "' + property.value + '"'/>
                     <#if property?has_next>
@@ -184,7 +184,7 @@
                 </#list>
                 <#return retval + "} }">
             <#else>
-                <#return '{ "Name": "' + mcitemresourcepath + '" }'>
+                <#return '"' + mcitemresourcepath + '"'>
             </#if>
         </#if>
     <#elseif !mappedBlock.getUnmappedValue().startsWith("TAG:")>
@@ -195,7 +195,7 @@
             </#if>
             <#assign propertymap = fp.file("utils/defaultstates.json")?eval_json/>
             <#if propertymap[mapped]?has_content>
-                <#assign retval='{ "Name": "' + mapped + '", "Properties" : {'/>
+                <#assign retval='{ "id": "' + mapped + '", "properties" : {'/>
                 <#list propertymap[mapped] as property>
                     <#assign retval = retval + '"' + property.name + '": "' + property.value + '"'/>
                     <#if property?has_next>
@@ -204,11 +204,11 @@
                 </#list>
                 <#return retval + "} }">
             <#else>
-                <#return '{ "Name": "' + mapped + '" }'>
+                <#return '"' + mapped + '"'>
             </#if>
         </#if>
     </#if>
-    <#return '{ "Name": "minecraft:air" }'>
+    <#return '"minecraft:air"'>
 </#function>
 
 <#function mappedPotionToRegistryName potionValue>

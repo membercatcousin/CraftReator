@@ -23,7 +23,7 @@
  */
 
 package ${package}.init;
-
+import org.lwjgl.glfw.GLFW;
 import java.text.DecimalFormat;
 
 @Environment(EnvType.CLIENT) public class ${JavaModName}Screens {

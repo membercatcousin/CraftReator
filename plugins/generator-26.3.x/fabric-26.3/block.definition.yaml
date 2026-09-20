@@ -12,7 +12,7 @@ templates:
   - template: block/configured_oregen.json.ftl
     writer: json
     condition: generateFeature
-    name: "@MODDATAROOT/worldgen/configured_feature/@registryname.json"
+    name: "@MODDATAROOT/worldgen/feature/@registryname.json"
   - template: block/placed_oregen.json.ftl
     writer: json
     condition: generateFeature

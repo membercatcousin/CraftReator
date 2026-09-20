@@ -12,7 +12,7 @@
 </#if>
 <#if w.hasElementsOfType('armor')>
 	<#assign mixins = mixins + ['PiglinAiMixin']>
-	<#assign client_mixins = client_mixins + ['EquipmentLayerRendererMixin']>
+	<#-- <#assign client_mixins = client_mixins + ['EquipmentLayerRendererMixin']> -->
 </#if>
 <#if w.getGElementsOfType('livingentity')?filter(e -> e.spawnInDungeons)?size != 0>
 	<#assign mixins = mixins + ['MonsterRoomFeatureMixin']>

@@ -29,22 +29,49 @@ package ${package}.init;
 
 import com.mojang.datafixers.util.Pair;
 
+import net.minecraft.world.level.levelgen.material.MaterialRules;
+import net.minecraft.world.level.levelgen.material.rule.MaterialRule;
+import net.minecraft.world.level.levelgen.material.rule.SequenceRule;
+import net.minecraft.world.level.levelgen.VerticalAnchor;
+import net.minecraft.world.level.levelgen.placement.CaveSurface;
+import net.minecraft.world.level.dimension.DimensionType;
+import net.minecraft.world.level.dimension.BuiltinDimensionTypes;
+import net.minecraft.world.level.dimension.LevelStem;
+import net.minecraft.world.level.levelgen.NoiseBasedChunkGenerator;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.biome.Climate;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.core.Holder;
+import net.minecraft.core.HolderGetter;
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.Identifier;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
+
+import java.util.List;
+import java.util.ArrayList;
+import java.util.function.Function;
+
 <#assign spawn_overworld = biomes?filter(biome -> biome.spawnBiome)>
 <#assign spawn_overworld_caves = biomes?filter(biome -> biome.spawnInCaves)>
 <#assign spawn_nether = biomes?filter(biome -> biome.spawnBiomeNether)>
 
 public class ${JavaModName}Biomes {
 
-	public static final Identifier OVERWORLD_BIOMESOURCE_PRESET_ID = Identifier.withDefaultNamespace("overworld");
-	public static final Identifier NETHER_BIOMESOURCE_PRESET_ID = Identifier.withDefaultNamespace("nether");
+        public static final Identifier OVERWORLD_BIOMESOURCE_PRESET_ID = Identifier.withDefaultNamespace("overworld");
+        public static final Identifier NETHER_BIOMESOURCE_PRESET_ID = Identifier.withDefaultNamespace("nether");
 
-	private static boolean BOOTSTRAP_VALIDATION_PASSED = false;
+        private static boolean BOOTSTRAP_VALIDATION_PASSED = false;
 
-	public static void load() {
-		<#-- At FMLCommonSetupEvent, bootstrap validation is already done -->
-		BOOTSTRAP_VALIDATION_PASSED = true;
+        private static HolderGetter<Biome> BIOME_GETTER;
 
-		ServerLifecycleEvents.SERVER_STARTING.register((server) -> {
+        public static void load() {
+                <#-- At FMLCommonSetupEvent, bootstrap validation is already done -->
+                BOOTSTRAP_VALIDATION_PASSED = true;
+
+                ServerLifecycleEvents.SERVER_STARTING.register((server) -> {
+            BIOME_GETTER = server.registryAccess().lookupOrThrow(Registries.BIOME);
             Registry<LevelStem> levelStemTypeRegistry = server.registryAccess().lookupOrThrow(Registries.LEVEL_STEM);
             for (LevelStem levelStem : levelStemTypeRegistry.stream().toList()) {
                 Holder<DimensionType> dimensionType = levelStem.type();
@@ -54,221 +81,221 @@ public class ${JavaModName}Biomes {
                     }
                 }
             }
-		});
-	}
+                });
+        }
 
-	public static SurfaceRules.RuleSource adaptSurfaceRule(SurfaceRules.RuleSource currentRuleSource, Holder<DimensionType> dimensionType) {
-		<#if spawn_overworld?has_content || spawn_overworld_caves?has_content>
-		if (dimensionType.is(BuiltinDimensionTypes.OVERWORLD)) return injectOverworldSurfaceRules(currentRuleSource);
-		</#if>
+        public static Holder<MaterialRule> adaptMaterialRule(Holder<MaterialRule> currentRule, Holder<DimensionType> dimensionType) {
+                <#if spawn_overworld?has_content || spawn_overworld_caves?has_content>
+                if (dimensionType.is(BuiltinDimensionTypes.OVERWORLD)) return Holder.direct(injectOverworldMaterialRules(currentRule.value()));
+                </#if>
 
-		<#if spawn_nether?has_content>
-		if (dimensionType.is(BuiltinDimensionTypes.NETHER)) return injectNetherSurfaceRules(currentRuleSource);
-		</#if>
+                <#if spawn_nether?has_content>
+                if (dimensionType.is(BuiltinDimensionTypes.NETHER)) return Holder.direct(injectNetherMaterialRules(currentRule.value()));
+                </#if>
 
-		return currentRuleSource;
-	}
+                return currentRule;
+        }
 
-	public static <T> Climate.ParameterList<T> adaptPresetParameterList(Identifier idArg, Climate.ParameterList<T> originalList, Function<ResourceKey<Biome>, T> lookup) {
-		<#-- Skip adaptation during server bootstrap validation, as custom biomes are not available yet -->
-		if (!BOOTSTRAP_VALIDATION_PASSED) return originalList;
+        public static <T> Climate.ParameterList<T> adaptPresetParameterList(Identifier idArg, Climate.ParameterList<T> originalList, Function<ResourceKey<Biome>, T> lookup) {
+                <#-- Skip adaptation during server bootstrap validation, as custom biomes are not available yet -->
+                if (!BOOTSTRAP_VALIDATION_PASSED) return originalList;
 
-		<#if spawn_overworld?has_content || spawn_overworld_caves?has_content>
-		if (idArg.equals(OVERWORLD_BIOMESOURCE_PRESET_ID)) return ${JavaModName}Biomes.modifyOverworldParameterPoints(originalList, lookup);
-		</#if>
+                <#if spawn_overworld?has_content || spawn_overworld_caves?has_content>
+                if (idArg.equals(OVERWORLD_BIOMESOURCE_PRESET_ID)) return ${JavaModName}Biomes.modifyOverworldParameterPoints(originalList, lookup);
+                </#if>
 
-		<#if spawn_nether?has_content>
-		if (idArg.equals(NETHER_BIOMESOURCE_PRESET_ID)) return ${JavaModName}Biomes.modifyNetherParameterPoints(originalList, lookup);
-		</#if>
+                <#if spawn_nether?has_content>
+                if (idArg.equals(NETHER_BIOMESOURCE_PRESET_ID)) return ${JavaModName}Biomes.modifyNetherParameterPoints(originalList, lookup);
+                </#if>
 
-		return originalList;
-	}
+                return originalList;
+        }
 
-	<#if spawn_overworld?has_content || spawn_overworld_caves?has_content>
-	private static SurfaceRules.RuleSource injectOverworldSurfaceRules(SurfaceRules.RuleSource currentRuleSource) {
-		List<SurfaceRules.RuleSource> customSurfaceRules = new ArrayList<>();
+        <#if spawn_overworld?has_content || spawn_overworld_caves?has_content>
+        private static MaterialRule injectOverworldMaterialRules(MaterialRule currentRule) {
+                List<MaterialRule> customMaterialRules = new ArrayList<>();
 
-		<#list spawn_overworld_caves as biome>
-		customSurfaceRules.add(anySurfaceRule(
-			ResourceKey.create(Registries.BIOME, Identifier.fromNamespaceAndPath("${modid}", "${biome.getModElement().getRegistryName()}")),
-			${mappedBlockToBlockStateCode(biome.groundBlock)},
-			${mappedBlockToBlockStateCode(biome.undergroundBlock)},
-			${mappedBlockToBlockStateCode(biome.getUnderwaterBlock())}
-		));
-		</#list>
+                <#list spawn_overworld_caves as biome>
+                customMaterialRules.add(anyMaterialRule(
+                        ResourceKey.create(Registries.BIOME, Identifier.fromNamespaceAndPath("${modid}", "${biome.getModElement().getRegistryName()}")),
+                        ${mappedBlockToBlockStateCode(biome.groundBlock)},
+                        ${mappedBlockToBlockStateCode(biome.undergroundBlock)},
+                        ${mappedBlockToBlockStateCode(biome.getUnderwaterBlock())}
+                ));
+                </#list>
 
-		<#list spawn_overworld as biome>
-		customSurfaceRules.add(preliminarySurfaceRule(
-			ResourceKey.create(Registries.BIOME, Identifier.fromNamespaceAndPath("${modid}", "${biome.getModElement().getRegistryName()}")),
-			${mappedBlockToBlockStateCode(biome.groundBlock)},
-			${mappedBlockToBlockStateCode(biome.undergroundBlock)},
-			${mappedBlockToBlockStateCode(biome.getUnderwaterBlock())}
-		));
-		</#list>
+                <#list spawn_overworld as biome>
+                customMaterialRules.add(preliminaryMaterialRule(
+                        ResourceKey.create(Registries.BIOME, Identifier.fromNamespaceAndPath("${modid}", "${biome.getModElement().getRegistryName()}")),
+                        ${mappedBlockToBlockStateCode(biome.groundBlock)},
+                        ${mappedBlockToBlockStateCode(biome.undergroundBlock)},
+                        ${mappedBlockToBlockStateCode(biome.getUnderwaterBlock())}
+                ));
+                </#list>
 
-		if (currentRuleSource instanceof SurfaceRules.SequenceRuleSource sequenceRuleSource) {
-			customSurfaceRules.addAll(sequenceRuleSource.sequence());
-			return SurfaceRules.sequence(customSurfaceRules.toArray(SurfaceRules.RuleSource[]::new));
-		} else {
-			customSurfaceRules.add(currentRuleSource);
-			return SurfaceRules.sequence(customSurfaceRules.toArray(SurfaceRules.RuleSource[]::new));
-		}
-	}
+                if (currentRule instanceof SequenceRule sequenceRule) {
+                        customMaterialRules.addAll(sequenceRule.sequence());
+                        return MaterialRules.sequence(customMaterialRules.toArray(MaterialRule[]::new));
+                } else {
+                        customMaterialRules.add(currentRule);
+                        return MaterialRules.sequence(customMaterialRules.toArray(MaterialRule[]::new));
+                }
+        }
 
-	public static <T> Climate.ParameterList<T> modifyOverworldParameterPoints(Climate.ParameterList<T> originalList, Function<ResourceKey<Biome>, T> lookup) {
-		List<Pair<Climate.ParameterPoint, T>> parameters = new ArrayList<>(originalList.values());
+        public static <T> Climate.ParameterList<T> modifyOverworldParameterPoints(Climate.ParameterList<T> originalList, Function<ResourceKey<Biome>, T> lookup) {
+                List<Pair<Climate.ParameterPoint, T>> parameters = new ArrayList<>(originalList.values());
 
-		<#list spawn_overworld as biome>
-		parameters.add(new Pair<>(
-			new Climate.ParameterPoint(
-				Climate.Parameter.span(${biome.genTemperature.min}f, ${biome.genTemperature.max}f),
-				Climate.Parameter.span(${biome.genHumidity.min}f, ${biome.genHumidity.max}f),
-				Climate.Parameter.span(${biome.genContinentalness.min}f, ${biome.genContinentalness.max}f),
-				Climate.Parameter.span(${biome.genErosion.min}f, ${biome.genErosion.max}f),
-				Climate.Parameter.point(0.0f),
-				Climate.Parameter.span(${biome.genWeirdness.min}f, ${biome.genWeirdness.max}f),
-				0 <#-- offset -->
-			),
-			lookup.apply(ResourceKey.create(Registries.BIOME, Identifier.fromNamespaceAndPath("${modid}", "${biome.getModElement().getRegistryName()}")))
-		));
-		parameters.add(new Pair<>(
-			new Climate.ParameterPoint(
-				Climate.Parameter.span(${biome.genTemperature.min}f, ${biome.genTemperature.max}f),
-				Climate.Parameter.span(${biome.genHumidity.min}f, ${biome.genHumidity.max}f),
-				Climate.Parameter.span(${biome.genContinentalness.min}f, ${biome.genContinentalness.max}f),
-				Climate.Parameter.span(${biome.genErosion.min}f, ${biome.genErosion.max}f),
-				Climate.Parameter.point(1.0f),
-				Climate.Parameter.span(${biome.genWeirdness.min}f, ${biome.genWeirdness.max}f),
-				0 <#-- offset -->
-			),
-			lookup.apply(ResourceKey.create(Registries.BIOME, Identifier.fromNamespaceAndPath("${modid}", "${biome.getModElement().getRegistryName()}")))
-		));
-		</#list>
+                <#list spawn_overworld as biome>
+                parameters.add(new Pair<>(
+                        new Climate.ParameterPoint(
+                                Climate.Parameter.span(${biome.genTemperature.min}f, ${biome.genTemperature.max}f),
+                                Climate.Parameter.span(${biome.genHumidity.min}f, ${biome.genHumidity.max}f),
+                                Climate.Parameter.span(${biome.genContinentalness.min}f, ${biome.genContinentalness.max}f),
+                                Climate.Parameter.span(${biome.genErosion.min}f, ${biome.genErosion.max}f),
+                                Climate.Parameter.point(0.0f),
+                                Climate.Parameter.span(${biome.genWeirdness.min}f, ${biome.genWeirdness.max}f),
+                                0 <#-- offset -->
+                        ),
+                        lookup.apply(ResourceKey.create(Registries.BIOME, Identifier.fromNamespaceAndPath("${modid}", "${biome.getModElement().getRegistryName()}")))
+                ));
+                parameters.add(new Pair<>(
+                        new Climate.ParameterPoint(
+                                Climate.Parameter.span(${biome.genTemperature.min}f, ${biome.genTemperature.max}f),
+                                Climate.Parameter.span(${biome.genHumidity.min}f, ${biome.genHumidity.max}f),
+                                Climate.Parameter.span(${biome.genContinentalness.min}f, ${biome.genContinentalness.max}f),
+                                Climate.Parameter.span(${biome.genErosion.min}f, ${biome.genErosion.max}f),
+                                Climate.Parameter.point(1.0f),
+                                Climate.Parameter.span(${biome.genWeirdness.min}f, ${biome.genWeirdness.max}f),
+                                0 <#-- offset -->
+                        ),
+                        lookup.apply(ResourceKey.create(Registries.BIOME, Identifier.fromNamespaceAndPath("${modid}", "${biome.getModElement().getRegistryName()}")))
+                ));
+                </#list>
 
-		<#list spawn_overworld_caves as biome>
-		parameters.add(new Pair<>(
-			new Climate.ParameterPoint(
-				Climate.Parameter.span(${biome.genTemperature.min}f, ${biome.genTemperature.max}f),
-				Climate.Parameter.span(${biome.genHumidity.min}f, ${biome.genHumidity.max}f),
-				Climate.Parameter.span(${biome.genContinentalness.min}f, ${biome.genContinentalness.max}f),
-				Climate.Parameter.span(${biome.genErosion.min}f, ${biome.genErosion.max}f),
-				Climate.Parameter.span(${biome.genDepth.min}f, ${biome.genDepth.max}f),
-				Climate.Parameter.span(${biome.genWeirdness.min}f, ${biome.genWeirdness.max}f),
-				0 <#-- offset -->
-			),
-			lookup.apply(ResourceKey.create(Registries.BIOME, Identifier.fromNamespaceAndPath("${modid}", "${biome.getModElement().getRegistryName()}")))
-		));
-		</#list>
+                <#list spawn_overworld_caves as biome>
+                parameters.add(new Pair<>(
+                        new Climate.ParameterPoint(
+                                Climate.Parameter.span(${biome.genTemperature.min}f, ${biome.genTemperature.max}f),
+                                Climate.Parameter.span(${biome.genHumidity.min}f, ${biome.genHumidity.max}f),
+                                Climate.Parameter.span(${biome.genContinentalness.min}f, ${biome.genContinentalness.max}f),
+                                Climate.Parameter.span(${biome.genErosion.min}f, ${biome.genErosion.max}f),
+                                Climate.Parameter.span(${biome.genDepth.min}f, ${biome.genDepth.max}f),
+                                Climate.Parameter.span(${biome.genWeirdness.min}f, ${biome.genWeirdness.max}f),
+                                0 <#-- offset -->
+                        ),
+                        lookup.apply(ResourceKey.create(Registries.BIOME, Identifier.fromNamespaceAndPath("${modid}", "${biome.getModElement().getRegistryName()}")))
+                ));
+                </#list>
 
-		return new Climate.ParameterList<>(parameters);
-	}
-	</#if>
+                return new Climate.ParameterList<>(parameters);
+        }
+        </#if>
 
-	<#if spawn_nether?has_content>
-	private static SurfaceRules.RuleSource injectNetherSurfaceRules(SurfaceRules.RuleSource currentRuleSource) {
-		List<SurfaceRules.RuleSource> customSurfaceRules = new ArrayList<>();
+        <#if spawn_nether?has_content>
+        private static MaterialRule injectNetherMaterialRules(MaterialRule currentRule) {
+                List<MaterialRule> customMaterialRules = new ArrayList<>();
 
-		<#list spawn_nether as biome>
-		customSurfaceRules.add(anySurfaceRule(
-			ResourceKey.create(Registries.BIOME, Identifier.fromNamespaceAndPath("${modid}", "${biome.getModElement().getRegistryName()}")),
-			${mappedBlockToBlockStateCode(biome.groundBlock)},
-			${mappedBlockToBlockStateCode(biome.undergroundBlock)},
-			${mappedBlockToBlockStateCode(biome.getUnderwaterBlock())}
-		));
-		</#list>
+                <#list spawn_nether as biome>
+                customMaterialRules.add(anyMaterialRule(
+                        ResourceKey.create(Registries.BIOME, Identifier.fromNamespaceAndPath("${modid}", "${biome.getModElement().getRegistryName()}")),
+                        ${mappedBlockToBlockStateCode(biome.groundBlock)},
+                        ${mappedBlockToBlockStateCode(biome.undergroundBlock)},
+                        ${mappedBlockToBlockStateCode(biome.getUnderwaterBlock())}
+                ));
+                </#list>
 
-		if (currentRuleSource instanceof SurfaceRules.SequenceRuleSource sequenceRuleSource) {
-			customSurfaceRules.addAll(sequenceRuleSource.sequence());
-			return SurfaceRules.sequence(customSurfaceRules.toArray(SurfaceRules.RuleSource[]::new));
-		} else {
-			customSurfaceRules.add(currentRuleSource);
-			return SurfaceRules.sequence(customSurfaceRules.toArray(SurfaceRules.RuleSource[]::new));
-		}
-	}
+                if (currentRule instanceof SequenceRule sequenceRule) {
+                        customMaterialRules.addAll(sequenceRule.sequence());
+                        return MaterialRules.sequence(customMaterialRules.toArray(MaterialRule[]::new));
+                } else {
+                        customMaterialRules.add(currentRule);
+                        return MaterialRules.sequence(customMaterialRules.toArray(MaterialRule[]::new));
+                }
+        }
 
-	public static <T> Climate.ParameterList<T> modifyNetherParameterPoints(Climate.ParameterList<T> originalList, Function<ResourceKey<Biome>, T> lookup) {
-		List<Pair<Climate.ParameterPoint, T>> parameters = new ArrayList<>(originalList.values());
+        public static <T> Climate.ParameterList<T> modifyNetherParameterPoints(Climate.ParameterList<T> originalList, Function<ResourceKey<Biome>, T> lookup) {
+                List<Pair<Climate.ParameterPoint, T>> parameters = new ArrayList<>(originalList.values());
 
-		<#list spawn_nether as biome>
-		parameters.add(new Pair<>(
-			new Climate.ParameterPoint(
-				Climate.Parameter.span(${biome.genTemperature.min}f, ${biome.genTemperature.max}f),
-				Climate.Parameter.span(${biome.genHumidity.min}f, ${biome.genHumidity.max}f),
-				Climate.Parameter.span(${biome.genContinentalness.min}f, ${biome.genContinentalness.max}f),
-				Climate.Parameter.span(${biome.genErosion.min}f, ${biome.genErosion.max}f),
-				Climate.Parameter.point(0.0f),
-				Climate.Parameter.span(${biome.genWeirdness.min}f, ${biome.genWeirdness.max}f),
-				0 <#-- offset -->
-			),
-			lookup.apply(ResourceKey.create(Registries.BIOME, Identifier.fromNamespaceAndPath("${modid}", "${biome.getModElement().getRegistryName()}")))
-		));
-		parameters.add(new Pair<>(
-			new Climate.ParameterPoint(
-				Climate.Parameter.span(${biome.genTemperature.min}f, ${biome.genTemperature.max}f),
-				Climate.Parameter.span(${biome.genHumidity.min}f, ${biome.genHumidity.max}f),
-				Climate.Parameter.span(${biome.genContinentalness.min}f, ${biome.genContinentalness.max}f),
-				Climate.Parameter.span(${biome.genErosion.min}f, ${biome.genErosion.max}f),
-				Climate.Parameter.point(1.0f),
-				Climate.Parameter.span(${biome.genWeirdness.min}f, ${biome.genWeirdness.max}f),
-				0 <#-- offset -->
-			),
-			lookup.apply(ResourceKey.create(Registries.BIOME, Identifier.fromNamespaceAndPath("${modid}", "${biome.getModElement().getRegistryName()}")))
-		));
-		</#list>
+                <#list spawn_nether as biome>
+                parameters.add(new Pair<>(
+                        new Climate.ParameterPoint(
+                                Climate.Parameter.span(${biome.genTemperature.min}f, ${biome.genTemperature.max}f),
+                                Climate.Parameter.span(${biome.genHumidity.min}f, ${biome.genHumidity.max}f),
+                                Climate.Parameter.span(${biome.genContinentalness.min}f, ${biome.genContinentalness.max}f),
+                                Climate.Parameter.span(${biome.genErosion.min}f, ${biome.genErosion.max}f),
+                                Climate.Parameter.point(0.0f),
+                                Climate.Parameter.span(${biome.genWeirdness.min}f, ${biome.genWeirdness.max}f),
+                                0 <#-- offset -->
+                        ),
+                        lookup.apply(ResourceKey.create(Registries.BIOME, Identifier.fromNamespaceAndPath("${modid}", "${biome.getModElement().getRegistryName()}")))
+                ));
+                parameters.add(new Pair<>(
+                        new Climate.ParameterPoint(
+                                Climate.Parameter.span(${biome.genTemperature.min}f, ${biome.genTemperature.max}f),
+                                Climate.Parameter.span(${biome.genHumidity.min}f, ${biome.genHumidity.max}f),
+                                Climate.Parameter.span(${biome.genContinentalness.min}f, ${biome.genContinentalness.max}f),
+                                Climate.Parameter.span(${biome.genErosion.min}f, ${biome.genErosion.max}f),
+                                Climate.Parameter.point(1.0f),
+                                Climate.Parameter.span(${biome.genWeirdness.min}f, ${biome.genWeirdness.max}f),
+                                0 <#-- offset -->
+                        ),
+                        lookup.apply(ResourceKey.create(Registries.BIOME, Identifier.fromNamespaceAndPath("${modid}", "${biome.getModElement().getRegistryName()}")))
+                ));
+                </#list>
 
-		return new Climate.ParameterList<>(parameters);
-	}
-	</#if>
+                return new Climate.ParameterList<>(parameters);
+        }
+        </#if>
 
-	<#if spawn_overworld?has_content>
-	private static SurfaceRules.RuleSource preliminarySurfaceRule(ResourceKey<Biome> biomeKey, BlockState groundBlock, BlockState undergroundBlock, BlockState underwaterBlock) {
-		return SurfaceRules.ifTrue(SurfaceRules.isBiome(biomeKey),
-			SurfaceRules.ifTrue(SurfaceRules.abovePreliminarySurface(),
-				SurfaceRules.sequence(
-					SurfaceRules.ifTrue(SurfaceRules.stoneDepthCheck(0, false, 0, CaveSurface.FLOOR),
-						SurfaceRules.sequence(
-							SurfaceRules.ifTrue(SurfaceRules.waterBlockCheck(-1, 0),
-								SurfaceRules.state(groundBlock)
-							),
-							SurfaceRules.state(underwaterBlock)
-						)
-					),
-					SurfaceRules.ifTrue(SurfaceRules.stoneDepthCheck(0, true, 0, CaveSurface.FLOOR),
-						SurfaceRules.state(undergroundBlock)
-					)
-				)
-			)
-		);
-	}
-	</#if>
+        <#if spawn_overworld?has_content>
+        private static MaterialRule preliminaryMaterialRule(ResourceKey<Biome> biomeKey, BlockState groundBlock, BlockState undergroundBlock, BlockState underwaterBlock) {
+                return MaterialRules.ifTrue(MaterialRules.isBiome(BIOME_GETTER, biomeKey),
+                        MaterialRules.ifTrue(MaterialRules.abovePreliminarySurface(),
+                                MaterialRules.sequence(
+                                        MaterialRules.ifTrue(MaterialRules.stoneDepthCheck(0, false, 0, CaveSurface.FLOOR),
+                                                MaterialRules.sequence(
+                                                        MaterialRules.ifTrue(MaterialRules.waterBlockCheck(-1, 0),
+                                                                MaterialRules.state(groundBlock)
+                                                        ),
+                                                        MaterialRules.state(underwaterBlock)
+                                                )
+                                        ),
+                                        MaterialRules.ifTrue(MaterialRules.stoneDepthCheck(0, true, 0, CaveSurface.FLOOR),
+                                                MaterialRules.state(undergroundBlock)
+                                        )
+                                )
+                        )
+                );
+        }
+        </#if>
 
-	<#if spawn_nether?has_content || spawn_overworld_caves?has_content>
-	private static SurfaceRules.RuleSource anySurfaceRule(ResourceKey<Biome> biomeKey, BlockState groundBlock, BlockState undergroundBlock, BlockState underwaterBlock) {
-		return SurfaceRules.ifTrue(SurfaceRules.isBiome(biomeKey),
-			SurfaceRules.ifTrue(SurfaceRules.yBlockCheck(VerticalAnchor.aboveBottom(5), 0),
-				SurfaceRules.ifTrue(SurfaceRules.not(SurfaceRules.yBlockCheck(VerticalAnchor.belowTop(5), 0)),
-					SurfaceRules.sequence(
-						SurfaceRules.ifTrue(SurfaceRules.stoneDepthCheck(0, false, 0, CaveSurface.FLOOR),
-							SurfaceRules.sequence(
-								SurfaceRules.ifTrue(SurfaceRules.waterBlockCheck(-1, 0),
-									SurfaceRules.state(groundBlock)
-								),
-								SurfaceRules.state(underwaterBlock)
-							)
-						),
-						SurfaceRules.ifTrue(SurfaceRules.stoneDepthCheck(0, true, 0, CaveSurface.FLOOR),
-							SurfaceRules.state(undergroundBlock)
-						)
-					)
-				)
-			)
-		);
-	}
-	</#if>
+        <#if spawn_nether?has_content || spawn_overworld_caves?has_content>
+        private static MaterialRule anyMaterialRule(ResourceKey<Biome> biomeKey, BlockState groundBlock, BlockState undergroundBlock, BlockState underwaterBlock) {
+                return MaterialRules.ifTrue(MaterialRules.isBiome(BIOME_GETTER, biomeKey),
+                        MaterialRules.ifTrue(MaterialRules.yBlockCheck(VerticalAnchor.aboveBottom(5), 0),
+                                MaterialRules.ifTrue(MaterialRules.not(MaterialRules.yBlockCheck(VerticalAnchor.belowTop(5), 0)),
+                                        MaterialRules.sequence(
+                                                MaterialRules.ifTrue(MaterialRules.stoneDepthCheck(0, false, 0, CaveSurface.FLOOR),
+                                                        MaterialRules.sequence(
+                                                                MaterialRules.ifTrue(MaterialRules.waterBlockCheck(-1, 0),
+                                                                        MaterialRules.state(groundBlock)
+                                                                ),
+                                                                MaterialRules.state(underwaterBlock)
+                                                        )
+                                                ),
+                                                MaterialRules.ifTrue(MaterialRules.stoneDepthCheck(0, true, 0, CaveSurface.FLOOR),
+                                                        MaterialRules.state(undergroundBlock)
+                                                )
+                                        )
+                                )
+                        )
+                );
+        }
+        </#if>
 
-	public interface ${JavaModName}NoiseGeneratorSettings {
-		void set${modid}DimensionTypeReference(Holder<DimensionType> dimensionType);
-	}
+        public interface ${JavaModName}NoiseGeneratorSettings {
+                void set${modid}DimensionTypeReference(Holder<DimensionType> dimensionType);
+        }
 
 }
 
