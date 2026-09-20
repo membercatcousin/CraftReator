@@ -39,8 +39,8 @@ public abstract class LivingEntityMixin {
         return false;
     }
 
-	@Inject(method = "swing(Lnet/minecraft/world/InteractionHand;Z)V", at = @At("HEAD"))
-	public void swing(InteractionHand hand, boolean updateSelf, CallbackInfo ci) {
+	@Inject(method = "swing(Lnet/minecraft/world/InteractionHand;Lnet/minecraft/world/item/component/SwingAnimation;Z)Z", at = @At("HEAD"))
+	public void swing(InteractionHand hand, net.minecraft.world.item.component.SwingAnimation animation, boolean updateSelf, CallbackInfoReturnable<Boolean> cir) {
 		ItemStack stack = ((LivingEntity) (Object) this).getItemInHand(hand);
 		if (!stack.isEmpty()) {
             <#list itemsWithEntitySwing as item>
@@ -50,7 +50,7 @@ public abstract class LivingEntityMixin {
             </#list>
 		}
 	}
-	
+
 	@Inject(method = "startUsingItem(Lnet/minecraft/world/InteractionHand;)V", at = @At("HEAD"))
 	public void startUsingItem(InteractionHand hand, CallbackInfo ci) {
 		LivingEntity entity = (LivingEntity) (Object) this;
