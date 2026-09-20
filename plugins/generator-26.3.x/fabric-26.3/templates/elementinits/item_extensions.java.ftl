@@ -30,23 +30,31 @@ package ${package}.init;
 public class ${JavaModName}ItemExtensions {
 
 	public static void load() {
-        <#list itemextensions?filter(e -> e.compostLayerChance gt 0) as extension>
-        CompostableRegistry.INSTANCE.add(${mappedMCItemToItem(extension.item)}, ${extension.compostLayerChance}f);
-		</#list>
-
-        <#if w.getGElementsOfType('itemextension')?filter(e -> e.enableFuel)?size != 0>
-		FuelValueEvents.BUILD.register((builder, context) -> {
-            <#list itemextensions?filter(e -> e.enableFuel) as extension>
-                <#if hasProcedure(extension.fuelSuccessCondition)>if(<@procedureOBJToConditionCode extension.fuelSuccessCondition/>)</#if>
-                    builder.add(${mappedMCItemToItem(extension.item)},
-                    <#if hasProcedure(extension.fuelPower)>
-                        (int) <@procedureOBJToNumberCode extension.fuelPower/>
-                    <#else>
-                        ${extension.fuelPower.getFixedValue()}
-                    </#if>);
+        <#if (itemextensions?filter(e -> e.compostLayerChance gt 0)?size > 0) || (w.getGElementsOfType('itemextension')?filter(e -> e.enableFuel)?size > 0)>
+        net.fabricmc.fabric.api.item.v1.DefaultItemComponentEvents.MODIFY.register(modifyContext -> {
+            <#list itemextensions?filter(e -> e.compostLayerChance gt 0) as extension>
+            modifyContext.modify(${mappedMCItemToItem(extension.item)}, builder -> {
+                builder.set(net.minecraft.core.component.DataComponents.COMPOSTABLE, new net.minecraft.world.item.component.Compostable(new net.minecraft.util.valueproviders.ResolvableInt.Constant((int) (${extension.compostLayerChance} * 100))));
+            });
             </#list>
-		});
-		</#if>
+
+            <#list itemextensions?filter(e -> e.enableFuel) as extension>
+            modifyContext.modify(${mappedMCItemToItem(extension.item)}, builder -> {
+                <#if hasProcedure(extension.fuelSuccessCondition)>if(<@procedureOBJToConditionCode extension.fuelSuccessCondition/>)</#if>
+                builder.set(net.minecraft.core.component.DataComponents.COOKING_FUEL, new net.minecraft.world.item.component.CookingFuel(
+                    new net.minecraft.util.valueproviders.ResolvableInt.Constant(
+                        <#if hasProcedure(extension.fuelPower)>
+                            (int) <@procedureOBJToNumberCode extension.fuelPower/>
+                        <#else>
+                            ${extension.fuelPower.getFixedValue()}
+                        </#if>
+                    ),
+                    net.minecraft.util.valueproviders.ResolvableFloat.fromKey(net.minecraft.util.context.ContextFloatProviders.COOKING_DEFAULT_SPEED_MULTIPLIER)
+                ));
+            });
+            </#list>
+        });
+        </#if>
 	}
 }</@javacompress>
 <#-- @formatter:on -->
