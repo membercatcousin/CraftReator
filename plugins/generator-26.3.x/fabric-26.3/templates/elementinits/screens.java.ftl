@@ -23,7 +23,6 @@
  */
 
 package ${package}.init;
-import org.lwjgl.glfw.GLFW;
 import java.text.DecimalFormat;
 
 @Environment(EnvType.CLIENT) public class ${JavaModName}Screens {
@@ -119,9 +118,8 @@ import java.text.DecimalFormat;
 
 		@Override
 		public boolean keyPressed(KeyEvent event) {
-			int keyCode = event.key();
-			boolean flag = keyCode == GLFW.GLFW_KEY_LEFT;
-			if (flag || keyCode == GLFW.GLFW_KEY_RIGHT) {
+			boolean flag = event.isLeft();
+			if (flag || event.isRight()) {
 				if (this.minValue > this.maxValue)
 					flag = !flag;
 				float f = flag ? -1F : 1F;
