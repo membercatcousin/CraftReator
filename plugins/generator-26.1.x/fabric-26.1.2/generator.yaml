@@ -12,7 +12,7 @@ import:
 
 # Gradle task definitions
 gradle:
-  sync_task: genSourcesWithCfr
+  sync_task: classes
   run_client: build runClient
   run_server: build runServer
   export_file: "build/libs/modid-1.0.jar"
