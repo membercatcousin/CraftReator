@@ -38,4 +38,13 @@ java {
     targetCompatibility = JavaVersion.VERSION_25
 }
 
+afterEvaluate {
+    tasks.matching { it.name == 'downloadAssets' }.configureEach {
+        doNotTrackState("Wine compatibility")
+        doFirst {
+            println "ASSET DIR: " + project.file(assetsDirectory).absolutePath
+        }
+    }
+}
+
 apply from: 'mcreator.gradle'
