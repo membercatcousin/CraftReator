@@ -72,8 +72,6 @@ public class NewWorkspaceDialog extends MCreatorDialog {
 			UIRES.get("16px.datapack"));
 	private final JToggleButton resourcepack = new JToggleButton(L10N.t("dialog.new_workspace.resourcepack.toggle"),
 			UIRES.get("16px.resourcepack"));
-	private final JToggleButton addon = new JToggleButton(L10N.t("dialog.new_workspace.addon.toggle"),
-			UIRES.get("16px.bedrock"));
 
 	public NewWorkspaceDialog(Window w) {
 		super(w, null, true);
@@ -86,7 +84,6 @@ public class NewWorkspaceDialog extends MCreatorDialog {
 		AbstractWorkspacePanel paperWorkspacePanel = new PaperWorkspacePanel(this);
 		AbstractWorkspacePanel datapackWorkspacePanel = new DatapackWorkspacePanel(this);
 		AbstractWorkspacePanel resourcepackWorkspacePanel = new ResourcepackWorkspacePanel(this);
-		AbstractWorkspacePanel addonWorkspacePanel = new AddonWorkspacePanel(this);
 
 		JPanel buttons = new JPanel();
 
@@ -143,7 +140,6 @@ public class NewWorkspaceDialog extends MCreatorDialog {
 		workspacePanels.add("paper", paperWorkspacePanel.getContainer());
 		workspacePanels.add("datapack", datapackWorkspacePanel.getContainer());
 		workspacePanels.add("resourcepack", resourcepackWorkspacePanel.getContainer());
-		workspacePanels.add("addon", addonWorkspacePanel.getContainer());
 
 		workspacePanels.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 20));
 
@@ -219,20 +215,13 @@ public class NewWorkspaceDialog extends MCreatorDialog {
 			cardLayout.show(workspacePanels, "resourcepack");
 		});
 
-		styleButton(addon);
-		buttonGroup.add(addon);
-		addon.addActionListener(e -> {
-			current = addonWorkspacePanel;
-			cardLayout.show(workspacePanels, "addon");
-		});
+
 
 		workspaceType.add(separator("dialog.new_workspace.je_mod"));
 		workspaceType.add(neoforge);
 		workspaceType.add(fabric);
 		workspaceType.add(forge);
 		workspaceType.add(quilt);
-		workspaceType.add(separator("dialog.new_workspace.be_addon"));
-		workspaceType.add(addon);
 		workspaceType.add(separator("dialog.new_workspace.je_packs"));
 		workspaceType.add(datapack);
 		workspaceType.add(resourcepack);
@@ -268,11 +257,6 @@ public class NewWorkspaceDialog extends MCreatorDialog {
 		if (Generator.GENERATOR_CACHE.values().stream()
 				.noneMatch(gc -> gc.getGeneratorFlavor() == GeneratorFlavor.PAPER)) {
 			disableType(paper);
-		}
-
-		if (Generator.GENERATOR_CACHE.values().stream()
-				.noneMatch(gc -> gc.getGeneratorFlavor() == GeneratorFlavor.ADDON)) {
-			disableType(addon);
 		}
 
 		if (Generator.GENERATOR_CACHE.values().stream()
@@ -343,9 +327,6 @@ public class NewWorkspaceDialog extends MCreatorDialog {
 			break;
 		case PAPER:
 			paper.doClick();
-			break;
-		case ADDON:
-			addon.doClick();
 			break;
 		case DATAPACK:
 			datapack.doClick();
