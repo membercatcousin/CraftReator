@@ -1,0 +1,17 @@
+{
+  "name": "Breeze Dark",
+  "colorScheme": {
+    "backgroundColor": "0x232323",
+    "altBackgroundColor": "0x383838",
+    "secondAltBackgroundColor": "0x1e1e1e",
+    "foregroundColor": "0xf3f3f3",
+    "altForegroundColor": "0xc2c2c2"
+  },
+  "flatLafOverrides": {
+    "Component.accentColor": "#3080aa",
+    "Component.focusColor": "#3daee9",
+    "Component.focusedBorderColor": "#3daee9",
+    "List.selectionBackground": "#3793c4",
+    "List.selectionForeground": "#f3f3f3"
+  }
+}

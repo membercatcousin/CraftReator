@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   clip-rule="evenodd"
+   fill-rule="evenodd"
+   height="16"
+   stroke-linejoin="round"
+   width="16"
+   version="1.1"
+   id="svg4"
+   sodipodi:docname="runtask.svg"
+   inkscape:version="1.4.4 (dcaf3e7d9e, 2026-05-05)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs4" />
+  <sodipodi:namedview
+     id="namedview4"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:zoom="50"
+     inkscape:cx="8"
+     inkscape:cy="8"
+     inkscape:window-width="1920"
+     inkscape:window-height="1002"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg4" />
+  <path
+     d="m1.5 2.5h13v11h-13z"
+     fill="none"
+     stroke="#231f20"
+     id="path1" />
+  <path
+     d="m1.5 2.5h13v1.5h-13z"
+     fill="#231f20"
+     fill-rule="nonzero"
+     id="path2" />
+  <path
+     d="m9 10.5h4"
+     fill="none"
+     stroke="#231f20"
+     stroke-linejoin="miter"
+     id="path3" />
+  <path
+     d="m3 6v5l4-2.5z"
+     fill="#93c54b"
+     fill-rule="nonzero"
+     id="path4"
+     style="fill:#3793c4;fill-opacity:1" />
+</svg>

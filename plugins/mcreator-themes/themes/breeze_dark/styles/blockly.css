@@ -1,0 +1,128 @@
+body {
+    fill: var(--backgroundColor);
+}
+
+#blockly {
+    background: var(--backgroundColor);
+}
+
+.blocklySvg {
+    background-color: var(--backgroundColor) !important;
+}
+
+.blocklyMainBackground {
+    fill: var(--backgroundColor) !important;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--backgroundColorBrighter);
+}
+
+::-webkit-scrollbar-corner {
+    background: var(--backgroundColorBrighter);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--backgroundColorBrighter);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--altBackgroundColor);
+}
+
+.blocklyToolbox {
+    background-color: var(--backgroundColor);
+    color: var(--foregroundColor);
+}
+
+.blocklyToolboxCategoryContainer {
+    outline: none;
+}
+
+.blocklyTreeRow:not(.blocklyTreeSelected):hover {
+    background-color: var(--foregroundColor) !important;
+    color: var(--backgroundColor) !important;
+}
+
+.blocklyTreeSeparator {
+    border-bottom: solid var(--altBackgroundColor) 1px;
+}
+
+.blocklyFlyout {
+    background-color: var(--backgroundColorTransparent);
+}
+
+.blocklyScrollbarVertical .blocklyScrollbarHandle {
+    fill: var(--backgroundColorBrighter);
+}
+
+.blocklyScrollbarVertical:hover .blocklyScrollbarHandle {
+    fill: var(--altBackgroundColor);
+}
+
+.blocklyScrollbarHorizontal .blocklyScrollbarHandle {
+    fill: var(--backgroundColorBrighter);
+}
+
+.blocklyScrollbarHorizontal:hover .blocklyScrollbarHandle {
+    fill: var(--altBackgroundColor);
+}
+
+.whlab > .blocklyFlyoutLabelText {
+    fill: var(--foregroundColor) !important;
+}
+
+.blocklyDropDownDiv {
+    background: var(--altBackgroundColor) !important;
+    border-color: var(--secondAltBackgroundColor) !important;
+}
+
+.blocklyDropDownDiv .blocklyMenuItemContent {
+    color: var(--foregroundColor) !important;
+}
+
+.blocklyTooltipDiv {
+    background-color: var(--backgroundColor);
+    color: var(--foregroundColor);
+}
+
+.blocklyWidgetDiv .blocklyMenu {
+    background: var(--backgroundColor) !important;
+    border-color: var(--altBackgroundColor) !important;
+}
+
+.blocklyWidgetDiv .blocklyMenuItemContent {
+    color: var(--foregroundColor);
+}
+
+.blocklyWidgetDiv .blocklyMenuItemDisabled .blocklyMenuItemContent {
+    color: var(--altForegroundColor);
+}
+
+.blocklyCommentTextarea {
+    background: var(--backgroundColor);
+    color: var(--foregroundColor);
+}
+
+.blocklyMutatorBackground {
+    fill: var(--backgroundColor);
+    stroke-width: 0;
+}
+
+.blocklySelected > .blocklyPath {
+    stroke: var(--foregroundColor) !important;
+    stroke-width: 2px !important;
+}
+
+.blocklyHtmlTextAreaInput {
+    background: var(--backgroundColor);
+    color: var(--foregroundColor);
+}
+
+.thrasos-renderer .blocklyPath {
+    stroke: var(--altBackgroundColor);
+}
+
+.injectionDiv {
+    --blockly-active-node-color: var(--foregroundColor) !important;
+}
