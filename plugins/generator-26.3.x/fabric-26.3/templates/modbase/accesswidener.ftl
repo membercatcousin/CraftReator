@@ -9,8 +9,8 @@ extendable method net/minecraft/world/level/levelgen/feature/treedecorators/Tree
 </#if>
 
 <#if w.hasElementsOfType("feature")>
-accessible method net/minecraft/world/level/levelgen/feature/ScatteredOreFeature <init> (Lcom/mojang/serialization/Codec;)V
-extendable method net/minecraft/world/level/levelgen/feature/TreeFeature place (Lnet/minecraft/world/level/levelgen/feature/FeaturePlaceContext;)Z
+accessible method net/minecraft/world/level/levelgen/feature/ScatteredOreFeature <init> (Ljava/util/List;IF)V
+extendable method net/minecraft/world/level/levelgen/feature/TreeFeature place (Lnet/minecraft/world/level/WorldGenLevel;Lnet/minecraft/world/level/chunk/ChunkGenerator;Lnet/minecraft/util/RandomSource;Lnet/minecraft/core/BlockPos;)Z
 </#if>
 
 <#if w.getGElementsOfType('tool')?filter(e -> e.toolType.equals('Fishing rod'))?size != 0>

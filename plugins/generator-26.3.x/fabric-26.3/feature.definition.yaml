@@ -1,11 +1,11 @@
 templates:
   - template: feature/feature.java.ftl
     name: "@SRCROOT/@BASEPACKAGEPATH/world/features/@NAMEFeature.java"
-  - template: feature/configured_feature.json.ftl # loaded from datapack generator
+  - template: feature/configured_feature.json.ftl
     writer: json
     name: "@MODDATAROOT/worldgen/feature/@registryname.json"
     condition: hasConfiguredFeature()
-  - template: feature/placed_feature.json.ftl # loaded from datapack generator
+  - template: feature/placed_feature.json.ftl
     writer: json
     name: "@MODDATAROOT/worldgen/placed_feature/@registryname.json"
     condition: hasPlacedFeature()

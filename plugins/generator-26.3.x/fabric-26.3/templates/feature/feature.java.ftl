@@ -3,19 +3,6 @@
  # Copyright (C) 2012-2020, Pylo
  # Copyright (C) 2020-2026, Pylo, opensource contributors
  # Copyright (C) 2020-2026, Goldorion, opensource contributors
- #
- # Fabric-Generator-MCreator is free software: you can redistribute it and/or modify
- # it under the terms of the GNU General Public License as published by
- # the Free Software Foundation, either version 3 of the License, or
- # (at your option) any later version.
- #
- # Fabric-Generator-MCreator is distributed in the hope that it will be useful,
- # but WITHOUT ANY WARRANTY; without even the implied warranty of
- # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- # GNU General Public License for more details.
- #
- # You should have received a copy of the GNU General Public License
- # along with Fabric-Generator-MCreator. If not, see <https://www.gnu.org/licenses/>.
 -->
 
 <#-- @formatter:off -->
@@ -33,13 +20,27 @@
 </#if>
 package ${package}.world.features;
 
+import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
+import net.fabricmc.fabric.api.biome.v1.BiomeSelectionContext;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.Identifier;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.level.WorldGenLevel;
+import net.minecraft.world.level.levelgen.feature.Feature;
+import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
+import net.minecraft.world.level.levelgen.feature.OreFeature;
+import net.minecraft.world.level.levelgen.feature.configurations.OreConfiguration;
+
+import java.util.function.Predicate;
+
 <#assign configuration = generator.map(featuretype, "features", 1)>
 
 <@javacompress>
 public class ${name}Feature extends ${generator.map(featuretype, "features")} {
 
 	public ${name}Feature() {
-		super(${configuration}.CODEC);
+		super(java.util.List.of(), 0);
 	}
 
 	public static final Predicate<BiomeSelectionContext> GENERATE_BIOMES = BiomeSelectors.
