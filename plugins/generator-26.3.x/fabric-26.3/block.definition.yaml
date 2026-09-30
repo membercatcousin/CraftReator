@@ -686,6 +686,5 @@ tags:
       - "${data.vibrationalEvents?has_content}"
     entryprovider: getVibrationalEvents()
 
-field_exclusions: [transparencyType, displayFluidOverlay, beaconColorModifier, aiPathNodeType, plantsGrowOn, canRedstoneConnect, onDestroyedByPlayer,
-                   additionalHarvestCondition, hasEnergyStorage, energyCapacity, energyMaxReceive, energyMaxExtract, energyInitial, isFluidTank, fluidCapacity, fluidRestrictions,
-                   tintType]
+field_exclusions: [beaconColorModifier, aiPathNodeType, plantsGrowOn, canRedstoneConnect,
+                   additionalHarvestCondition, hasEnergyStorage, energyCapacity, energyMaxReceive, energyMaxExtract, energyInitial, isFluidTank, fluidCapacity, fluidRestrictions]
