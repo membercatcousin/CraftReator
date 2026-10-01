@@ -12,15 +12,21 @@ const workspace = Blockly.inject(blockly, {
     collapse: MCR_BLOCKLY_PREF['collapse'],
     disable: false,
     trashcan: MCR_BLOCKLY_PREF['trashcan'],
-    renderer: MCR_BLOCKLY_PREF['renderer'],
+    renderer: 'zelos',
+    grid: {
+        spacing: 20,
+        length: 2,
+        colour: '#3d3d3d',
+        snap: false
+    },
     maxTrashcanContents: MCR_BLOCKLY_PREF['maxTrashContents'],
     zoom: {
         controls: false,
         wheel: true,
-        startScale: MCR_BLOCKLY_PREF['startScale'],
-        maxScale: MCR_BLOCKLY_PREF['maxScale'],
-        minScale: MCR_BLOCKLY_PREF['minScale'],
-        scaleSpeed: MCR_BLOCKLY_PREF['scaleSpeed']
+        startScale: 0.8,
+        maxScale: 2.0,
+        minScale: 0.3,
+        scaleSpeed: 1.1
     },
     toolbox: '<xml id="toolbox"><category name="" colour=""></category></xml>'
 });
@@ -33,10 +39,10 @@ crossTabPlugin.init({
 
 workspace.addChangeListener(function (event) {
     if (workspace.isDragging())
-        return; // Don't update while changes are happening.
+        return;
 
     if (event.isUiEvent)
-        return; // Don't update on UI-only events.
+        return;
 
     if (typeof javabridge !== "undefined")
         javabridge.triggerEvent();
@@ -47,12 +53,10 @@ window.addEventListener('resize', function () {
 });
 Blockly.svgResize(workspace);
 
-// disable help entry
 Blockly.Block.prototype.setHelpUrl = function () {
     return '';
 }
 
-// modify blockly to export all variables, not only used ones
 Blockly.Variables.allUsedVarModels = function () {
     return workspace.getVariableMap().getAllVariables();
 };
@@ -115,17 +119,14 @@ function arrayToBlocklyDropDownArray(arrorig) {
     return retval;
 }
 
-// A function to properly convert workspace to XML (google/blockly#6738)
 function workspaceToXML() {
     const treeXml = Blockly.Xml.workspaceToDom(workspace, true);
 
-    // Remove variables child if present
     const variablesElements = treeXml.getElementsByTagName("variables");
     for (const varEl of variablesElements) {
         treeXml.removeChild(varEl);
     }
 
-    // Add variables child on top of DOM
     const variablesElement = Blockly.Xml.variablesToDom(workspace.getVariableMap().getAllVariables());
     if (variablesElement.hasChildNodes()) {
         treeXml.prepend(variablesElement);

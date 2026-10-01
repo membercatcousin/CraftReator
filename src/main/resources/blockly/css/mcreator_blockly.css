@@ -1,25 +1,83 @@
 ::-webkit-scrollbar {
-    width: 7px;
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.25);
 }
 
 .blocklyScrollbarBackground {
-    opacity: 255;
+    opacity: 0;
     fill: transparent;
+}
+
+.blocklyScrollbarVertical .blocklyScrollbarHandle,
+.blocklyScrollbarHorizontal .blocklyScrollbarHandle {
+    rx: 4px;
+    ry: 4px;
+    fill: rgba(255, 255, 255, 0.15) !important;
 }
 
 body {
     margin: 0;
     padding: 0;
     overflow: hidden;
-    font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    user-select: none;
+    -webkit-user-select: none;
+    background-color: #1e1e1e;
+}
+
+#blockly {
+position: absolute;
+top: 0;
+left: 0;
+bottom: 0;
+right: 0;
+background-color: #1e1e1e;
+background-image: radial-gradient(rgba(255, 255, 255, 0.08) 1.2px, transparent 1.2px);
+background-size: 20px 20px;
+}
+
+.blocklyMainBackground {
+    stroke-width: 0;
+    fill: transparent !important;
+}
+
+.blocklySvg {
+    background-color: transparent !important;
+}
+
+.blocklyFlyoutBackground {
+    fill-opacity: 0 !important;
+}
+
+.blocklyText {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif !important;
+    font-weight: 600 !important;
+    font-size: 12px !important;
+}
+
+.blocklySelected > .blocklyPath {
+    stroke: #ffab19 !important;
+    stroke-width: 3px !important;
 }
 
 .whlab > .blocklyFlyoutLabelText {
     font-size: 14px;
+    font-weight: 700;
 }
 
 .blocklyTreeLabel {
     font-size: 13px;
+    font-weight: 600;
+    color: #cccccc !important;
 }
 
 .blocklyToolboxCategory {
@@ -27,7 +85,8 @@ body {
 }
 
 .blocklyToolboxCategoryLabel {
-    font-size: 13px;
+    font-size: 12px;
+    font-weight: 600;
     font-family: inherit;
 }
 
@@ -35,76 +94,49 @@ body {
     line-height: 1 !important;
 }
 
-#blockly {
-    position: absolute;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    right: 0;
-}
-
-.blocklyMainBackground {
-    stroke-width: 0;
-}
-
-.blocklyFlyoutBackground {
-    fill-opacity: 0;
-}
-
-.blocklyScrollbarVertical .blocklyScrollbarHandle {
-    rx: 2px;
-    ry: 2px;
-    width: 6px;
-}
-
-.blocklyScrollbarHorizontal .blocklyScrollbarHandle {
-    rx: 2px;
-    ry: 2px;
-    height: 6px;
-}
-
-.blocklySelected > .blocklyPath {
-    stroke-width: 2px;
+.blocklyToolboxCategoryIcon {
+    background-image: none !important;
 }
 
 .blocklyShadow .blocklyText {
-    fill: #7c7c7c !important;
+    fill: #888888 !important;
 }
 
-.small-text {
+.blocklyWidgetDiv .blocklyMenu,
+.blocklyDropDownDiv {
+    border-radius: 8px !important;
+    box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.4) !important;
+    border: 1px solid rgba(255, 255, 255, 0.12) !important;
+    padding: 6px !important;
+    background-color: #1e1e1e !important;
+}
+
+.blocklyMenuItem {
+    border-radius: 6px;
+    padding: 6px 12px !important;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-size: 12px !important;
+    font-weight: 500 !important;
+    color: #e0e0e0 !important;
 }
 
-.blocklyWidgetDiv .blocklyMenu {
-    border-radius: 0;
-}
-
-.condition-label {
-    font-size: 13px !important;
+.blocklyMenuItemHighlight {
+    background-color: #4c97ff !important;
+    color: #ffffff !important;
 }
 
 .blocklyDropDownContent {
     position: relative;
+    border-radius: 8px;
 }
 
-body.transparent {
-    background: transparent !important;
+.small-text {
+    font-size: 11px !important;
 }
 
-body.transparent #blockly {
-    background: transparent !important;
-}
-
-body.transparent .blocklySvg {
-    background-color: transparent !important;
-}
-
-body.transparent .blocklyMainBackground {
-    fill: transparent !important;
-}
-
-.blocklyToolboxCategoryIcon {
-    background-image: none !important;
+.condition-label {
+    font-size: 12px !important;
+    font-weight: 600;
 }
 
 .blocklyToolbox:focus-visible,
@@ -121,4 +153,12 @@ body.transparent .blocklyMainBackground {
 .blocklyKeyboardNavigation .blocklyToolbox:has(.blocklyActiveFocus),
 .blocklyKeyboardNavigation .blocklyActiveFocus:is(.blocklyFlyout, .blocklyToolbox) {
     outline: none !important;
+}
+
+body.transparent,
+body.transparent #blockly,
+body.transparent .blocklySvg,
+body.transparent .blocklyMainBackground {
+    background: transparent !important;
+    fill: transparent !important;
 }
