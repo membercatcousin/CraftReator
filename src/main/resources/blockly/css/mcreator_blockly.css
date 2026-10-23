@@ -54,15 +54,19 @@ background-size: 20px 20px;
     background-color: transparent !important;
 }
 
+.blocklyFlyout,
 .blocklyFlyoutBackground {
-    fill-opacity: 0 !important;
+    background-color: #252526 !important;
+    fill: #252526 !important;
+    fill-opacity: 1 !important;
+    opacity: 1 !important;
 }
 
-.blocklyText {
+/*.blocklyText {
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif !important;
     font-weight: 600 !important;
     font-size: 12px !important;
-}
+}*/
 
 .blocklySelected > .blocklyPath {
     stroke: #ffab19 !important;

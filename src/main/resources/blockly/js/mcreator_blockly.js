@@ -31,6 +31,26 @@ const workspace = Blockly.inject(blockly, {
     toolbox: '<xml id="toolbox"><category name="" colour=""></category></xml>'
 });
 
+const f = workspace.getFlyout();
+if (f) {
+    const origShow = f.show;
+    f.show = function(xmlList) {
+        origShow.call(this, xmlList);
+        setTimeout(() => {
+            let blocks = this.getWorkspace().getTopBlocks();
+            let y = 20;
+            for (let b of blocks) {
+                let xy = b.getRelativeToSurfaceXY();
+                b.moveBy(20 - xy.x, y - xy.y);
+                y += b.getHeightWidth().height + 20;
+            }
+            if (this.getWorkspace().resizeContents) {
+                this.getWorkspace().resizeContents();
+            }
+        }, 10);
+    };
+}
+
 const crossTabPlugin = new CrossTabCopyPaste();
 crossTabPlugin.init({
     contextMenu: true,
