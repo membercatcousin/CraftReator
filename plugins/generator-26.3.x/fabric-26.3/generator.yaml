@@ -1,20 +1,20 @@
 name: Fabric for @minecraft (@buildfileversion)
-status: stable
-buildfileversion: 0.160.7
-subversion: 6
+status: experimental
+buildfileversion: 0.162.0
+subversion: 1
 
 import:
   - datapack-26.3.x
-  - neoforge-26.2:
+  - neoforge-26.3:
     exclude:
       - procedures
       - triggers
 
 # Gradle task definitions
 gradle:
-  sync_task: classes
-  run_client: build runClient
-  run_server: build runServer
+  sync_task: genSourcesWithCfr
+  run_client: runClient
+  run_server: runServer
   export_file: "build/libs/modid-1.0.jar"
 
 import_formatter:
@@ -39,6 +39,7 @@ import_formatter:
     MapColor: net.minecraft.world.level.material
     AttributeModifier: net.minecraft.world.entity.ai.attributes
     Consumer: java.util.function
+    VertexFormat: com.mojang.renderpearl.api.vertex
 
 # base generator roots
 source_root: "@WORKSPACEROOT/src/main/java"
@@ -148,7 +149,7 @@ base_templates:
     name: "@SRCROOT/@BASEPACKAGEPATH/event/MiscEvents.java"
 
 java_models:
-  key: mojmap-26.3.x
+  key: mojmap-26.1.x
   compatible: [mojmap-1.17.x, mojmap-1.18.x, mojmap-1.19.x, mojmap-1.20.x, mojmap-1.21.x]
   requested_key_words: [ModelPart, ~ModelRenderer]
 

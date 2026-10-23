@@ -1,5 +1,5 @@
 plugins {
-    id 'net.fabricmc.fabric-loom' version '1.17-SNAPSHOT'
+    id 'net.fabricmc.fabric-loom' version '1.18-SNAPSHOT'
 }
 
 version = '1.0'
@@ -12,7 +12,7 @@ loom {
 
 dependencies {
     minecraft "com.mojang:minecraft:${generator.getGeneratorMinecraftVersion()}"
-    implementation "net.fabricmc:fabric-loader:0.19.3"
+    implementation "net.fabricmc:fabric-loader:0.19.5"
 
     // Fabric API
     implementation "net.fabricmc.fabric-api:fabric-api:${generator.getGeneratorBuildFileVersion()}+${generator.getGeneratorMinecraftVersion()}"
@@ -36,15 +36,6 @@ java {
     withSourcesJar()
     sourceCompatibility = JavaVersion.VERSION_25
     targetCompatibility = JavaVersion.VERSION_25
-}
-
-afterEvaluate {
-    tasks.matching { it.name == 'downloadAssets' }.configureEach {
-        doNotTrackState("Wine compatibility")
-        doFirst {
-            println "ASSET DIR: " + project.file(assetsDirectory).absolutePath
-        }
-    }
 }
 
 apply from: 'mcreator.gradle'

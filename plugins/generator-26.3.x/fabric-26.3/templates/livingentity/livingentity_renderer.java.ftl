@@ -99,7 +99,11 @@ package ${package}.client.renderer;
 	<#assign stateForAnimations = "EntityRenderState">
 </#if>
 
-<#assign needsEntityInState = false>
+<#-- extractRenderState below is emitted before the members that read the entity from the render state -->
+<#assign needsEntityInState = (data.visualScale?? && hasProcedure(data.visualScale))
+		|| (data.transparentModelCondition?? && hasProcedure(data.transparentModelCondition))
+		|| (data.isShakingCondition?? && hasProcedure(data.isShakingCondition))
+		|| data.animations?filter(a -> !a.walking || a.syncedDataCondition?? || hasProcedure(a.condition))?has_content>
 
 <@javacompress>
 @Environment(EnvType.CLIENT)
@@ -139,10 +143,10 @@ public class ${name}Renderer extends <#if humanoid>Humanoid</#if>MobRenderer<${n
 				<#if layer.model != "Default">
 					LAYER_MODEL.setupAnim(state);
 					submitNodeCollector.submitModel(LAYER_MODEL, state, poseStack, RENDER_TYPE, light,
-						<#if layer.disableHurtOverlay>OverlayTexture.NO_OVERLAY<#else>LivingEntityRenderer.getOverlayCoords(state, 0)</#if>, state.outlineColor, null);
+						<#if layer.disableHurtOverlay>OverlayTexture.NO_OVERLAY<#else>LivingEntityRenderer.getOverlayCoords(state, 0)</#if>, state.outlineColor);
 				<#else>
 					submitNodeCollector.submitModel(this.getParentModel(), state, poseStack, RENDER_TYPE, light,
-						<#if layer.disableHurtOverlay>OverlayTexture.NO_OVERLAY<#else>LivingEntityRenderer.getOverlayCoords(state, 0)</#if>, state.outlineColor, null);
+						<#if layer.disableHurtOverlay>OverlayTexture.NO_OVERLAY<#else>LivingEntityRenderer.getOverlayCoords(state, 0)</#if>, state.outlineColor);
 				</#if>
 
 				<#if hasProcedure(layer.condition)>}</#if>
@@ -294,7 +298,10 @@ public class ${name}Renderer extends <#if humanoid>Humanoid</#if>MobRenderer<${n
 			<@ensureEntityReference/>
 			this.keyframeAnimation${animation?index}.apply(entity.animationState${animation?index}, state.ageInTicks, ${animation.speed}f);
 		<#else>
-			<#if hasProcedure(animation.condition)>
+			<#if animation.syncedDataCondition??>
+			<@ensureEntityReference/>
+			if (entity.getEntityData().get(${name}Entity.DATA_${animation.syncedDataCondition}))
+			<#elseif hasProcedure(animation.condition)>
 			<@ensureEntityReference/>
 			if (<@procedureCode animation.condition, {
 				"x": "entity.getX()",

@@ -42,7 +42,7 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 <#assign interfaces = []>
 
 <#if data.aiBase != "(none)">
-	<#assign extendsClass = data.aiBase?replace("Enderman", "EnderMan")>
+	<#assign extendsClass = data.aiBase>
 <#else>
 	<#assign extendsClass = data.mobBehaviourType?replace("Mob", "Monster")?replace("Creature", "PathfinderMob")>
 </#if>
@@ -653,7 +653,9 @@ public class ${name}Entity extends ${extendsClass} <#if interfaces?size gt 0>imp
 		if (this.level().isClientSide()) {
 			<#list data.animations as animation>
 				<#if !animation.walking>
-					<#if hasProcedure(animation.condition)>
+					<#if animation.syncedDataCondition??>
+					this.animationState${animation?index}.animateWhen(this.entityData.get(DATA_${animation.syncedDataCondition}), this.tickCount);
+					<#elseif hasProcedure(animation.condition)>
 					this.animationState${animation?index}.animateWhen(<@procedureCode animation.condition, {
 						"x": "this.getX()",
 						"y": "this.getY()",
@@ -922,10 +924,13 @@ public class ${name}Entity extends ${extendsClass} <#if interfaces?size gt 0>imp
 	</#if>
 
 	public static void init() {
+		<#-- Fabric API refuses to add spawns for MobCategory.MISC -->
+		<#if data.mobSpawningType.getUnmappedValue() != "misc">
 		BiomeModifications.addSpawn(GENERATE_BIOMES
 		<#if hasProcedure(data.spawningCondition)>
 		.and(context -> <@procedureOBJToConditionCode data.spawningCondition/>)
 		</#if>, ${data.mobSpawningType}, ${JavaModName}Entities.${REGISTRYNAME}, ${data.spawningProbability}, ${data.minNumberOfMobsPerGroup}, ${data.maxNumberOfMobsPerGroup});
+		</#if>
 	}
 	</#if>
 
@@ -959,7 +964,8 @@ public class ${name}Entity extends ${extendsClass} <#if interfaces?size gt 0>imp
 		builder = builder.add(Attributes.SPAWN_REINFORCEMENTS_CHANCE);
 		</#if>
 
-		<#if aiblocks?seq_contains("follow_item_in_hands")>
+		<#-- TemptGoal reads TEMPT_RANGE, and these vanilla AI bases register it in super.registerGoals() -->
+		<#if ["Chicken", "Cow", "Horse", "Ocelot", "Pig"]?seq_contains(data.aiBase) || aiblocks?seq_contains("follow_item_in_hands")>
 		builder = builder.add(Attributes.TEMPT_RANGE, 10);
 		</#if>
 

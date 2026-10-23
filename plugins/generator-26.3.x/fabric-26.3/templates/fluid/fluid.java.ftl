@@ -192,6 +192,8 @@ public abstract class ${name}Fluid extends FlowingFluid {
 						-6506636
 						<#elseif data.tintType == "Foliage" || data.tintType == "Default foliage">
 						-12012264
+						<#elseif data.tintType == "Dry foliage">
+						10710342
 						<#elseif data.tintType == "Birch foliage">
 						-8345771
 						<#elseif data.tintType == "Spruce foliage">
@@ -214,6 +216,8 @@ public abstract class ${name}Fluid extends FlowingFluid {
 							BiomeColors.getAverageFoliageColor(world, pos)
 						<#elseif data.tintType == "Default foliage">
 							FoliageColor.FOLIAGE_DEFAULT
+						<#elseif data.tintType == "Dry foliage">
+							BiomeColors.getAverageDryFoliageColor(world, pos)
 						<#elseif data.tintType == "Birch foliage">
 							FoliageColor.FOLIAGE_BIRCH
 						<#elseif data.tintType == "Spruce foliage">
@@ -221,12 +225,12 @@ public abstract class ${name}Fluid extends FlowingFluid {
 						<#elseif data.tintType == "Water">
 							BiomeColors.getAverageWaterColor(world, pos)
 						<#elseif data.tintType == "Sky">
-							Minecraft.getInstance().gameRenderer.getMainCamera().attributeProbe().getValue(EnvironmentAttributes.SKY_COLOR, 0)
+							ARGB.colorFromVector3f(Minecraft.getInstance().gameRenderer.mainCamera().attributeProbe().getValue(EnvironmentAttributes.SKY_COLOR, 0))
 						<#elseif data.tintType == "Fog">
-							Minecraft.getInstance().gameRenderer.getMainCamera().attributeProbe().getValue(EnvironmentAttributes.FOG_COLOR, 0)
+							ARGB.colorFromVector3f(Minecraft.getInstance().gameRenderer.mainCamera().attributeProbe().getValue(EnvironmentAttributes.FOG_COLOR, 0))
 						<#else>
-							Minecraft.getInstance().gameRenderer.getMainCamera().attributeProbe().getValue(EnvironmentAttributes.WATER_FOG_COLOR, 0)
-						</#if> | 0xFF000000;
+							ARGB.colorFromVector3f(Minecraft.getInstance().gameRenderer.mainCamera().attributeProbe().getValue(EnvironmentAttributes.WATER_FOG_COLOR, 0))
+						</#if>;
 					}
 				}
 				<#else>

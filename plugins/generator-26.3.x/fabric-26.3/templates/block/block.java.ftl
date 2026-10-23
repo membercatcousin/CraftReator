@@ -51,6 +51,9 @@ public class ${getClassName()}Block extends ${getBlockClass(data.blockBase)}
 	</#if>
 	<#if data.hasInventory>
 		<#assign interfaces += ["EntityBlock"]>
+		<#if data.guiBoundTo?has_content>
+			<#assign interfaces += ["${JavaModName}Menus.BoundBlock"]>
+		</#if>
 	</#if>
 	<#if data.isBonemealable && !(data.blockBase?has_content && data.blockBase == "TrapDoor")>
 		<#assign interfaces += ["BonemealableBlock"]>
@@ -106,12 +109,6 @@ public class ${getClassName()}Block extends ${getBlockClass(data.blockBase)}
 	</#if>
 
 	<#if data.hasGravity>
-	public static final MapCodec<${name}Block> CODEC = simpleCodec(${name}Block::new);
-
-	@Override public MapCodec<${name}Block> codec() {
-		return CODEC;
-	}
-
 	@Override public int getDustColor(BlockState blockstate, BlockGetter world, BlockPos pos) {
 		return blockstate.getMapColor(world, pos).col;
 	}
@@ -166,13 +163,15 @@ public class ${getClassName()}Block extends ${getBlockClass(data.blockBase)}
 			.randomTicks()
 		</#if>
 		<#if data.reactionToPushing != "NORMAL">
-			.pushReaction(PushReaction.${data.reactionToPushing})
+			.pushReaction(PushReaction.${data.reactionToPushing?replace("DESTROY", "POPPED")?replace("BLOCK", "IMMOVEABLE")?replace("PUSH_ONLY", "PUSH")?replace("IGNORE", "IGNORE_ENTITY")})
 		</#if>
 		<#if data.emissiveRendering>
 			.postProcess((bs, br, bp) -> bp)
-			.emissiveRendering((bs, br, bp) -> true)
+			.emissiveRendering(bs -> true)
 		</#if>
-		<#if data.hasTransparency>
+		<#if data.forceRedstoneConductor>
+			.isRedstoneConductor((bs, br, bp) -> true)
+		<#elseif data.hasTransparency>
 			.isRedstoneConductor((bs, br, bp) -> false)
 		</#if>
 		<#if (!data.isNotColidable && data.offsetType != "NONE")>
@@ -204,7 +203,7 @@ public class ${getClassName()}Block extends ${getBlockClass(data.blockBase)}
 		</#if>
 		<#if data.blockBase?has_content && data.blockBase == "Leaves">
 			.isSuffocating((bs, br, bp) -> false)
-			.isViewBlocking((bs, br, bp) -> false)
+			.isViewBlocking((bs, br, bp, aabb) -> false)
 		</#if>
 		<#if var_extends_class! == "WallSignBlock" || var_extends_class! == "WallHangingSignBlock">
 			.overrideLootTable(${JavaModName}Blocks.${REGISTRYNAME}.getLootTable())
@@ -218,8 +217,8 @@ public class ${getClassName()}Block extends ${getBlockClass(data.blockBase)}
 				super(Blocks.AIR.defaultBlockState(), <@blockProperties/>);
 			<#elseif data.blockBase == "Leaves">
 				super(${data.leavesParticleChance}f,
-						<#if data.leavesParticleType??>${data.leavesParticleType},
-						<#elseif data.tintType == "No tint">ColorParticleOption.create(ParticleTypes.TINTED_LEAVES, ${data.getLeavesParticleColor()}),
+						<#if data.leavesParticleType??>${data.leavesParticleType}, AmbientLeavesBlockSoundPlayer.noAmbientSound(),
+						<#elseif data.tintType == "No tint">ColorParticleOption.create(ParticleTypes.TINTED_LEAVES, ${data.getLeavesParticleColor()}), AmbientLeavesBlockSoundPlayer.noAmbientSound(),
 						</#if><@blockProperties/>);
 			<#elseif data.blockBase == "PressurePlate" || data.blockBase == "TrapDoor" || data.blockBase == "Door">
 				super(BlockSetType.${data.blockSetType}, <@blockProperties/>);
@@ -278,21 +277,36 @@ public class ${getClassName()}Block extends ${getBlockClass(data.blockBase)}
 	<#if defaultStateCustomShape || statesWithCustomShape?has_content>
 		<#if data.rotationMode != 0 || statesWithCustomShape?has_content>
 		private Function<BlockState, VoxelShape> makeShapes() {
-			return this.getShapeForEachState(state -> {
-				<#list statesWithCustomShape as state>
-					<#if !state?is_first>else </#if>if (
+			<#macro stateCondition state>
+				<#if state.stateMap.keySet()?has_content>
 					<#list state.stateMap.keySet() as property>
 						<#assign value = state.stateMap.get(property)>
 						<#if property.getClass().getSimpleName().equals("StringType")>
 							<#assign value = generator.map(property.getName(), "blockstateproperties", 2) + "." + value?upper_case>
 						</#if>
-						state.getValue(${property.getName().replace("CUSTOM:", "")?upper_case}) == ${value}<#sep>&&
+					state.getValue(${property.getName().replace("CUSTOM:", "")?upper_case}) == ${value}<#sep>&&
 					</#list>
-				) {
-					return <@boundingBoxWithRotation state data.rotationMode data.enablePitch/>;
-				}
-				</#list>
-				return <@boundingBoxWithRotation data data.rotationMode data.enablePitch/>;
+                <#else>true</#if>
+			</#macro>
+
+			return this.getShapeForEachState(state -> {
+				<#if data.multipartModel && statesWithCustomShape?has_content>
+					<#-- multipart: shape is union of shapes of all parts with matching condition,
+					     block states not matched by any part have an empty shape -->
+					VoxelShape shape = Shapes.empty();
+					<#list statesWithCustomShape as state>
+					if (<@stateCondition state/>)
+						shape = Shapes.or(shape, <@boundingBoxWithRotation state data.rotationMode data.enablePitch/>);
+					</#list>
+					return shape;
+				<#else>
+					<#list statesWithCustomShape as state>
+					<#if !state?is_first>else </#if>if (<@stateCondition state/>) {
+						return <@boundingBoxWithRotation state data.rotationMode data.enablePitch/>;
+					}
+					</#list>
+					return <@boundingBoxWithRotation data data.rotationMode data.enablePitch/>;
+				</#if>
 			}
 			<#-- exclude states that don't affect shape -->
 			<#assign usedProperties = data.getPropertiesUsedInStates()>
@@ -435,7 +449,7 @@ public class ${getClassName()}Block extends ${getBlockClass(data.blockBase)}
 
 	<#macro initCustomBlockStateProperties>
 		<#list filteredCustomProperties as prop>
-			<#assign propName = prop.property().getName()>
+			<#local propName = prop.property().getName()>
 			.setValue(${propName.replace("CUSTOM:", "")?upper_case},
 				<#if prop.property().getClass().getSimpleName().equals("StringType")>
 					<#if propName.startsWith("CUSTOM:")>
@@ -623,6 +637,12 @@ public class ${getClassName()}Block extends ${getBlockClass(data.blockBase)}
 			return tileEntity instanceof MenuProvider menuProvider ? menuProvider : null;
 		}
 
+		<#if data.guiBoundTo?has_content>
+		@Override public Class<? extends AbstractContainerMenu> getBoundMenuClass() {
+			return ${data.guiBoundTo}Menu.class;
+		}
+		</#if>
+
 		@Override public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
 			return new ${name}BlockEntity(pos, state);
 		}
@@ -680,27 +700,29 @@ public class ${getClassName()}Block extends ${getBlockClass(data.blockBase)}
 					List.of(BlockTintSources.grass())
 				<#elseif data.tintType == "Foliage">
 					List.of(BlockTintSources.foliage())
+				<#elseif data.tintType == "Dry foliage">
+					List.of(BlockTintSources.dryFoliage())
 				<#elseif data.tintType == "Water">
 					List.of(BlockTintSources.water())
 				<#elseif data.tintType == "Sky">
 					List.of(new BlockTintSource() {
 						@Override public int color(BlockState state) { return 8562943; }
 						@Override public int colorInWorld(BlockState state, BlockAndTintGetter level, BlockPos pos) {
-							return Minecraft.getInstance().gameRenderer.getMainCamera().attributeProbe().getValue(EnvironmentAttributes.SKY_COLOR, 0);
+							return ARGB.colorFromVector3f(Minecraft.getInstance().gameRenderer.mainCamera().attributeProbe().getValue(EnvironmentAttributes.SKY_COLOR, 0));
 						}
 					})
 				<#elseif data.tintType == "Fog">
 					List.of(new BlockTintSource() {
 						@Override public int color(BlockState state) { return 12638463; }
 						@Override public int colorInWorld(BlockState state, BlockAndTintGetter level, BlockPos pos) {
-							return Minecraft.getInstance().gameRenderer.getMainCamera().attributeProbe().getValue(EnvironmentAttributes.FOG_COLOR, 0);
+							return ARGB.colorFromVector3f(Minecraft.getInstance().gameRenderer.mainCamera().attributeProbe().getValue(EnvironmentAttributes.FOG_COLOR, 0));
 						}
 					})
 				<#else>
 					List.of(new BlockTintSource() {
 						@Override public int color(BlockState state) { return 329011; }
 						@Override public int colorInWorld(BlockState state, BlockAndTintGetter level, BlockPos pos) {
-							return Minecraft.getInstance().gameRenderer.getMainCamera().attributeProbe().getValue(EnvironmentAttributes.WATER_FOG_COLOR, 0);
+							return ARGB.colorFromVector3f(Minecraft.getInstance().gameRenderer.mainCamera().attributeProbe().getValue(EnvironmentAttributes.WATER_FOG_COLOR, 0));
 						}
 					})
 				</#if>,
@@ -734,10 +756,10 @@ public class ${getClassName()}Block extends ${getBlockClass(data.blockBase)}
 	</#list>
 
 	<#if data.hasSpecialInformation(w) && !(var_extends_class??)> <#-- Do not generate item class for secondary block templates -->
-	public static class Item extends <#if data.isDoubleBlock()>DoubleHighBlock<#elseif data.blockBase! == "Sign">Sign<#elseif data.blockBase! == "HangingSign">HangingSign<#else>Block</#if>Item {
+	public static class Item extends <#if data.isDoubleBlock()>DoubleHighBlock<#elseif data.blockBase! == "Sign">StandingAndWallBlock<#elseif data.blockBase! == "HangingSign">HangingSign<#else>Block</#if>Item {
 
 		public Item(Item.Properties properties) {
-			super(${JavaModName}Blocks.${REGISTRYNAME}, <#if data.isSign()>${JavaModName}Blocks.${data.getWallRegistryNameUpper()}, </#if>properties);
+			super(${JavaModName}Blocks.${REGISTRYNAME}, <#if data.isSign()>${JavaModName}Blocks.${data.getWallRegistryNameUpper()}, </#if><#if data.blockBase! == "Sign">Direction.DOWN, </#if>properties);
 		}
 
 		<@addSpecialInformation data.specialInformation, "block." + modid + "." + registryname, true/>

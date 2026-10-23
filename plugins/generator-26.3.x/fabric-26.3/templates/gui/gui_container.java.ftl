@@ -61,7 +61,23 @@ public class ${name}Menu extends AbstractContainerMenu implements ${JavaModName}
 	}
 
 	public ${name}Menu(int id, Inventory inv, FriendlyByteBuf extraData) {
-		this(id, inv, new SimpleContainer(${data.getMaxSlotID() + 1}), extraData);
+		this(id, inv, resolveContainer(inv, extraData), extraData);
+	}
+
+	<#-- Slots are created with the container, so a container block at pos must be resolved before them -->
+	private static Container resolveContainer(Inventory inv, FriendlyByteBuf extraData) {
+		<#if data.type == 1>
+			if (extraData != null) {
+				FriendlyByteBuf buf = new FriendlyByteBuf(extraData.copy());
+				BlockPos pos = buf.readBlockPos();
+				if (buf.readableBytes() == 0 && inv.player.level().getBlockEntity(pos) instanceof BaseContainerBlockEntity baseContainerBlockEntity) {
+					if (inv.player.level().getBlockState(pos).getBlock() instanceof ${JavaModName}Menus.BoundBlock boundBlock && boundBlock.getBoundMenuClass() == ${name}Menu.class
+							|| baseContainerBlockEntity.getContainerSize() > ${data.getMaxSlotID()})
+						return baseContainerBlockEntity;
+				}
+			}
+		</#if>
+		return new SimpleContainer(${data.getMaxSlotID() + 1});
 	}
 
 	public ${name}Menu(int id, Inventory inv, Container container, FriendlyByteBuf extraData) {
@@ -88,10 +104,17 @@ public class ${name}Menu extends AbstractContainerMenu implements ${JavaModName}
 					boundEntity = world.getEntity(extraData.readVarInt());
 					if(boundEntity != null)
 						this.bound = true;
-				} else { <#-- if we find container block at pos, we bind to it in all cases -->
+				} else { <#-- might be bound to container block at pos -->
 					boundBlockEntity = this.world.getBlockEntity(pos);
-					if (boundBlockEntity instanceof BaseContainerBlockEntity)
-						this.bound = true;
+					if (boundBlockEntity instanceof BaseContainerBlockEntity baseContainerBlockEntity) {
+						<#-- Blocks explicitly bound to this GUI bind without container size check, so misconfigured inventory size fails visibly -->
+						if (this.world.getBlockState(pos).getBlock() instanceof ${JavaModName}Menus.BoundBlock boundBlock && boundBlock.getBoundMenuClass() == ${name}Menu.class) {
+							this.bound = true;
+						<#-- Other containers (e.g. vanilla ones or blocks bound to other GUIs) only bind if slots of this GUI fit in the container (forum/124103) -->
+						} else if (baseContainerBlockEntity.getContainerSize() > ${data.getMaxSlotID()}) {
+							this.bound = true;
+						}
+					}
 				}
 			}
 		</#if>

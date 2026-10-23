@@ -28,11 +28,7 @@ package ${package}.init;
 
 <#assign hasTintedBlocks = false>
 <#list blocks as block>
-	<#if block.getModElement().getTypeString() == "block">
-		<#if block.tintType != "No tint">
-			<#assign hasTintedBlocks = true>
-		</#if>
-	<#elseif block.getModElement().getTypeString() == "plant">
+	<#if block.getModElement().getTypeString() == "block" || block.getModElement().getTypeString() == "plant">
 		<#if block.tintType != "No tint">
 			<#assign hasTintedBlocks = true>
 		</#if>
@@ -77,7 +73,7 @@ public class ${JavaModName}Blocks {
             <#list sub_blocks as block>
                 <#if block.getModElement().getTypeString() != "dimension">
                     <#if block.strippingResult?? && !block.strippingResult.isEmpty()>
-                        net.fabricmc.fabric.api.registry.BlockTransformerHelper.registerStripping(${JavaModName}Blocks.${block.getModElement().getRegistryNameUpper()}, ${mappedBlockToBlock(block.strippingResult)});
+                        BlockTransformerHelper.registerStripping(${JavaModName}Blocks.${block.getModElement().getRegistryNameUpper()}, ${mappedBlockToBlock(block.strippingResult)});
                     </#if>
                 </#if>
             </#list>
@@ -92,7 +88,7 @@ public class ${JavaModName}Blocks {
         <#list sub_blocks as block>
             <#if block.getModElement().getTypeString() != "dimension">
                 <#if block.strippingResult?? && !block.strippingResult.isEmpty()>
-                    net.fabricmc.fabric.api.registry.BlockTransformerHelper.registerStripping(${JavaModName}Blocks.${block.getModElement().getRegistryNameUpper()}, ${mappedBlockToBlock(block.strippingResult)});
+                    BlockTransformerHelper.registerStripping(${JavaModName}Blocks.${block.getModElement().getRegistryNameUpper()}, ${mappedBlockToBlock(block.strippingResult)});
                 </#if>
             </#if>
         </#list>

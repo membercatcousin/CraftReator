@@ -8,11 +8,6 @@ accessible class net/minecraft/world/level/biome/MultiNoiseBiomeSourceParameterL
 extendable method net/minecraft/world/level/levelgen/feature/treedecorators/TreeDecoratorType <init> (Lcom/mojang/serialization/MapCodec;)V
 </#if>
 
-<#if w.hasElementsOfType("feature")>
-accessible method net/minecraft/world/level/levelgen/feature/ScatteredOreFeature <init> (Ljava/util/List;IF)V
-extendable method net/minecraft/world/level/levelgen/feature/TreeFeature place (Lnet/minecraft/world/level/WorldGenLevel;Lnet/minecraft/world/level/chunk/ChunkGenerator;Lnet/minecraft/util/RandomSource;Lnet/minecraft/core/BlockPos;)Z
-</#if>
-
 <#if w.getGElementsOfType('tool')?filter(e -> e.toolType.equals('Fishing rod'))?size != 0>
 extendable method net/minecraft/world/entity/projectile/FishingHook shouldStopFishing (Lnet/minecraft/world/entity/player/Player;)Z
 </#if>
@@ -22,12 +17,10 @@ accessible method net/minecraft/world/level/levelgen/feature/MonsterRoomFeature 
 </#if>
 
 <#if w.hasElementsOfType("armor")>
-accessible class net/minecraft/client/renderer/entity/layers/EquipmentLayerRenderer$LayerTextureKey
-accessible class net/minecraft/client/renderer/entity/layers/EquipmentLayerRenderer$TrimTextureKey
-accessible method net/minecraft/client/renderer/entity/layers/EquipmentLayerRenderer$TrimTextureKey <init> (Lnet/minecraft/world/item/equipment/trim/ArmorTrim;Lnet/minecraft/client/resources/model/EquipmentClientInfo$LayerType;Lnet/minecraft/client/resources/model/EquipmentClientInfo;)V
-accessible method net/minecraft/client/renderer/entity/layers/EquipmentLayerRenderer$LayerTextureKey <init> (Lnet/minecraft/client/resources/model/EquipmentClientInfo$LayerType;Lnet/minecraft/client/resources/model/EquipmentClientInfo$Layer;)V
 extendable method net/minecraft/client/model/Model renderToBuffer (Lcom/mojang/blaze3d/vertex/PoseStack;Lcom/mojang/blaze3d/vertex/VertexConsumer;III)V
-accessible method net/minecraft/client/renderer/entity/layers/EquipmentLayerRenderer getColorForLayer (Lnet/minecraft/client/resources/model/EquipmentClientInfo$Layer;I)I
+accessible field net/minecraft/client/renderer/feature/FeatureRenderDispatcher featureRenderers Lnet/minecraft/client/renderer/feature/FeatureRendererMap;
+accessible field net/minecraft/client/renderer/feature/RenderTypeFeatureRenderer currentGroup Lnet/minecraft/client/renderer/feature/RenderTypeFeatureRenderer$Group;
+accessible method net/minecraft/client/renderer/feature/RenderTypeFeatureRenderer getVertexBuilder (Lnet/minecraft/client/renderer/rendertype/RenderType;)Lcom/mojang/blaze3d/vertex/VertexConsumer;
 </#if>
 
 <#if w.hasElementsOfType("gui")>

@@ -211,7 +211,7 @@ public void onDroppedByPlayer(ItemStack itemstack, Player entity) {
 <#if procedure?has_content && (hasProcedure(procedure) || procedure.getFixedValue())>
 @Override public boolean isFoil(ItemStack itemstack) {
 	<#if hasProcedure(procedure)>
-		<#assign dependencies = procedure.getDependencies(generator.getWorkspace())>
+		<#local dependencies = procedure.getDependencies(generator.getWorkspace())>
 		<#if !(dependencies.isEmpty() || (dependencies.size() == 1 && dependencies.get(0).getName() == "itemstack"))>
 		Entity entity = ${JavaModName}.clientPlayer();
 		</#if>
@@ -492,7 +492,7 @@ public void onDroppedByPlayer(ItemStack itemstack, Player entity) {
 </#macro>
 
 <#macro bonemealEvents isBonemealTargetCondition="" bonemealSuccessCondition="" onBonemealSuccess="">
-@Override public boolean isValidBonemealTarget(LevelReader worldIn, BlockPos pos, BlockState blockstate) {
+@Override public boolean isValidBonemealTarget(LevelReader worldIn, BlockPos pos, BlockState blockstate, BonemealSource bonemealSource) {
 	<#if hasProcedure(isBonemealTargetCondition)>
 	if (worldIn instanceof LevelAccessor world) {
 		return <@procedureCode isBonemealTargetCondition, {
@@ -510,7 +510,7 @@ public void onDroppedByPlayer(ItemStack itemstack, Player entity) {
 	</#if>
 }
 
-@Override public boolean isBonemealSuccess(Level world, RandomSource random, BlockPos pos, BlockState blockstate) {
+@Override public boolean isBonemealSuccess(Level world, RandomSource random, BlockPos pos, BlockState blockstate, BonemealSource bonemealSource) {
 	<#if hasProcedure(bonemealSuccessCondition)>
 	return <@procedureCode bonemealSuccessCondition, {
 		"x": "pos.getX()",
@@ -524,7 +524,7 @@ public void onDroppedByPlayer(ItemStack itemstack, Player entity) {
 	</#if>
 }
 
-@Override public void performBonemeal(ServerLevel world, RandomSource random, BlockPos pos, BlockState blockstate) {
+@Override public void performBonemeal(ServerLevel world, RandomSource random, BlockPos pos, BlockState blockstate, BonemealSource bonemealSource) {
 <#if hasProcedure(onBonemealSuccess)>
 	<@procedureCode onBonemealSuccess, {
 		"x": "pos.getX()",
